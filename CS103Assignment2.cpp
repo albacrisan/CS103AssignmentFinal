@@ -1,19 +1,14 @@
 // CS103Assignment2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream> //for basic input and output
+#include <iostream>
 #include <vector>
 #include <list>
-#include <fstream> //for handling the files - e.g. csv etc
+#include <fstream>
 #include <string>
 #include <Windows.h>
 #include <iomanip>
 #include <stdlib.h>
-#include<ctime> 
-#include <map>
-#include<cstdlib> //for exit() and system(“cls”) functions
-#include<cstring> //for all string functions
-#include<conio.h> //for getch() function
 using namespace std;
 
 struct Parent {
@@ -58,16 +53,12 @@ vector <Student> StudentLogin(vector<Student>& student);
 void adminLogin();
 void adminDatabase();
 
-void ShowHeader();
 
 int main() {
-
-	ShowHeader();
-
 	vector <Student> student;
 	vector <Student> studentFromFile;
 	int menuChoice, loginChoice;
-	//cout << "***University Database***\n\n\n";
+	cout << "***University Database***\n\n\n";
 	cout << "Press 1 to Login\nPress 2 to Register\nPress 3 to exit Program\nEnter your choice: "; cin >> menuChoice;
 	switch (menuChoice) {
 	case 1:
@@ -112,13 +103,12 @@ int main() {
 
 vector <Student> Registration(vector<Student>& student) {
 	system("cls");
-	ShowHeader();
 	Student s;
 	cout << "***Student Registration***\n\n";
 	cout << "Please Enter your Student ID (6 digit Number): "; cin >> s.ID;
 	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.PW;
 	cout << "Enter your first name: "; cin >> s.fName;
-	cout << "Enter your last name: "; cin >> s.lName;
+	cout << "Enter your last name "; cin >> s.lName;
 
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
@@ -133,7 +123,6 @@ vector <Student> Registration(vector<Student>& student) {
 }
 vector <Student> StudentLogin(vector<Student>& student) {
 	system("cls");
-	ShowHeader();
 	Student s;
 	string attemptPW;
 	long int attemptID;
@@ -195,39 +184,11 @@ void adminLogin() {
 
 void adminDatabase() {
 	system("cls");
-	ShowHeader();
 	cout << "***Admin Database Access***\n\n";
 }
 void studentDatabase() {
 	system("cls");
-	ShowHeader();
 	cout << "***Student Database Access***\n\n";
 }
 
-
-void ShowHeader() //the function which shows the header on each screen
-{
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	system("cls");
-
-	struct tm newtime;
-	__time32_t aclock;
-	char buffer[32];
-	errno_t errNum;
-	_time32(&aclock);
-	_localtime32_s(&newtime, &aclock);
-	errNum = asctime_s(buffer, 32, &newtime);
-
-	SetConsoleTextAttribute(color, 10);
-	cout << endl << "---------------------------------------------------------------------------------------------\n";
-	SetConsoleTextAttribute(color, 15);
-	cout << "                          Welcome to Victoria University \n";
-	SetConsoleTextAttribute(color, 2);
-	printf("                  Current date and time: %s", buffer);
-	SetConsoleTextAttribute(color, 10);
-	cout << "---------------------------------------------------------------------------------------------\n";
-	cout << endl << endl;
-	SetConsoleTextAttribute(color, 15);
-	return;
-}
 
