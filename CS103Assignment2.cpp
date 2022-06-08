@@ -14,6 +14,7 @@
 #include<cstdlib> //for exit() and system(“cls”) functions
 #include<cstring> //for all string functions
 #include<conio.h> //for getch() function
+#include <sstream>
 using namespace std;
 
 struct Parent {
@@ -131,10 +132,11 @@ vector <Student> Registration(vector<Student>& student) {
 	return(student);
 
 }
-vector <Student> StudentLogin(vector<Student>& student) {
+vector <Student> StudentLogin() {
 	system("cls");
 	ShowHeader();
 	Student s;
+	vector<Student> tempStudent;
 	string attemptPW;
 	long int attemptID;
 	int counter = 3, flag = 0;
@@ -142,6 +144,17 @@ vector <Student> StudentLogin(vector<Student>& student) {
 		cout << "***Student Login***\n\n";
 		cout << "Enter ID: "; cin >> attemptID;
 		cout << "Enter PW: "; cin >> attemptPW;
+		string line;
+		string property;
+		fstream StudentDatabase("stDB.csv", ios::in);
+		while (getline(StudentDatabase, line, ',')) {
+			cout << line << endl;
+			istringstream linestream(line);
+			getline(linestream, property, ',');
+			s.Password = property;
+			getline(linestream, property, ',');
+			stringstream ss(property);
+			ss >> s.ID;
 
 		fstream StudentDatabase("stDB.csv", ios::in);
 		while (StudentDatabase >> s.ID >> s.PW) {
@@ -160,11 +173,12 @@ vector <Student> StudentLogin(vector<Student>& student) {
 			Sleep(1000);
 			break;
 		}
+		tempStudent.push_back(s);
 	}
 	cout << "Closing app...\n\n\n\n";
 	Sleep(1000);
 	exit(1);
-	return(student);
+	return(tempStudent);
 }
 
 void adminLogin() {
