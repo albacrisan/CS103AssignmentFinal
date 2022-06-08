@@ -18,12 +18,21 @@ using namespace std;
 
 struct Parent {
 	string fName;
-	string LName;
+	string lName;
 	long int contactNumber;
+	Parent(string fN = "FirstName", string lN = "LastName", long int cN = 0000000000) {
+		fName = fN;
+		lName = lN;
+		contactNumber = cN;
+	}
 };
 struct Teacher {
 	string fName;
 	string lName;
+	Teacher(string fN = "FirstName", string lN = "LastName") {
+		fName = fN;
+		lName = lN;
+	}
 
 };
 struct classStr {
@@ -31,24 +40,31 @@ struct classStr {
 	float studentGrade;
 	float courseCost;
 	Teacher teacher;
+	classStr(string c = "ClassCode", float sG = 0.5, float cC = 7000) {
+		code = c;
+		studentGrade = sG;
+		courseCost = cC;
+	}
 };
 
-struct Student {
+struct Student { // main struct, all others are nested within student, database will hold all student and class information somehow. maybe have seperate DB for classes?
 	long int ID;
-	string PW;
+	string Password;
 	string fName;
 	string lName;
+	string email;
 	Parent parent;
 	classStr class1;
 	classStr class2;
 	classStr class3;
 	classStr class4;
 
-	Student() {
-		ID = 0;
-		PW = "PW";
-		fName = "FirstName";
-		lName = "LastName";
+	Student(int id = 001122, string pw = "Password", string fN = "FirstName", string lN = "LastName", string em = "email@domain.com") {
+		ID = id;
+		Password = pw;
+		fName = fN;
+		lName = lN;
+		email = em;
 
 	}
 };
@@ -116,13 +132,13 @@ vector <Student> Registration(vector<Student>& student) {
 	Student s;
 	cout << "***Student Registration***\n\n";
 	cout << "Please Enter your Student ID (6 digit Number): "; cin >> s.ID;
-	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.PW;
+	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
 	cout << "Enter your first name: "; cin >> s.fName;
 	cout << "Enter your last name: "; cin >> s.lName;
 
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
-	StudentDatabase << s.ID << "," << s.PW << endl;
+	StudentDatabase << s.ID << "," << s.Password << endl;
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
 	Sleep(1000);
@@ -144,8 +160,8 @@ vector <Student> StudentLogin(vector<Student>& student) {
 		cout << "Enter PW: "; cin >> attemptPW;
 
 		fstream StudentDatabase("stDB.csv", ios::in);
-		while (StudentDatabase >> s.ID >> s.PW) {
-			if (attemptID == s.ID && attemptPW == s.PW) {// not inputting the right variable for it to read off the spreadsheet
+		while (StudentDatabase >> s.ID >> s.Password) {
+			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
 				flag = 1;
 			}
 		}
@@ -196,12 +212,28 @@ void adminLogin() {
 void adminDatabase() {
 	system("cls");
 	ShowHeader();
+	int menuChoice;
 	cout << "***Admin Database Access***\n\n";
+	cout << "Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
+	cout << "Press 2 to view student full student database\n";// prints all data in the student database
+	cout << "Press 3 to edit class roles\n"; // opens options to add or remove students to class role by searching for their ID in the DB
+	cout << "Press 4 to edit class information\n"; // add or remove class, edit class name, tuition cost
+	cout << "Press 5 to assign student grades\n"; // add or change student grade for each class
+	cout << "Press 6 to log out\n"; // return to main and log out
+	cout << "Enter your choice: "; cin >> menuChoice;
+
 }
 void studentDatabase() {
 	system("cls");
 	ShowHeader();
+	int menuChoice;
 	cout << "***Student Database Access***\n\n";
+	cout << "Press 1 to edit person details\n"; //fname lname, email, parent details
+	cout << "Press 2 to view enrolled classess\n"; //brings to next menu that shows class 1,2,3,4 (name)
+	cout << "Press 3 to grade summary for the year\n"; // brings up grades for class 1,2,3,4
+	cout << "Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
+	cout << "Press 5 to log out\n"; cin >> menuChoice;// returns to main menu
+	cout << "Enter your choice\n"; cin >> menuChoice;
 }
 
 
