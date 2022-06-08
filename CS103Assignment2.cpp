@@ -185,27 +185,31 @@ vector <Student> StudentLogin(vector<Student>& student) {
 
 void adminLogin() {
 	system("cls");
-	int counter = 3;
+	int counter = 3, flag = 0;
 	long int adminID = 000000, enteredID;
 	string adminPW = "Password", enteredPW;
 	while (counter != 0) {
 		cout << "***Admin Login***\n";
 		cout << "Enter Admin ID: "; cin >> enteredID;
 		cout << "Enter Admin PW: "; cin >> enteredPW;
-		if (adminID == enteredID) {
-			cout << "\n\nLogin Successful\nWelcome admin. Opening Database now...";
+		if (adminID == enteredID && adminPW == enteredPW) {
+			flag = 1;
+		}
+		switch (flag) {
+		case 0:
+			counter--;
+			cout << "\nIncorrect ID or Password\n" << counter << " login attempts remaining\n";
+			break;
+
+		case 1:
+			cout << "\nLogin successfull\nDirecting you to database...\n";
 			Sleep(1000);
 			adminDatabase();
 			break;
-
-
-		}
-		else {
-			counter--;
-			cout << "\nInvalid ID or PW " << counter << " attempts remaining\n";
 		}
 	}
-	cout << "0 login attempts remaining\n Closing app...";
+	cout << "Closing app...\n\n\n\n";
+	Sleep(1000);
 	exit(3);
 }
 
