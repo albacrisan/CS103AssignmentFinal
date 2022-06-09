@@ -122,7 +122,7 @@ int main() {
 	case 2:
 		cout << "\n\nDirecting to Student Registration...";
 		Sleep(500);
-		Registration(student);
+		student = Registration(student);
 		break;
 	case 3:
 		cout << "\n\nClosing App...";
