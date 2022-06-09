@@ -9,11 +9,11 @@
 #include <Windows.h>
 #include <iomanip>
 #include <stdlib.h>
-#include<ctime> 
+#include <ctime> 
 #include <map>
-#include<cstdlib> //for exit() and system(“cls”) functions
-#include<cstring> //for all string functions
-#include<conio.h> //for getch() function
+#include <cstdlib> //for exit() and system(“cls”) functions
+#include <cstring> //for all string functions
+#include <conio.h> //for getch() function
 #include <sstream>
 using namespace std;
 
@@ -71,9 +71,20 @@ struct Student { // main struct, all others are nested within student, database 
 };
 
 vector <Student> Registration(vector<Student>& student);
-vector <Student> StudentLogin(vector<Student>& student);
+vector <Student> StudentLogin();
 void adminLogin();
 void adminDatabase();
+
+//admin Database menu option functions
+void studentSearch();
+void printDatabase();
+void editRoll();
+void gradeStudent();
+
+void editStudent();
+void studentClassSum();
+void StudentGradeSum();
+void studentTuitionSum();
 
 void ShowHeader();
 
@@ -92,7 +103,7 @@ int main() {
 		if (loginChoice == 1) {
 			cout << "\n\nDirecting to Student Login...";
 			Sleep(500);
-			StudentLogin(student);
+			StudentLogin();
 			break;
 		}
 		else if (loginChoice == 2) {
@@ -171,7 +182,7 @@ vector <Student> StudentLogin() {
 			getline(linestream, property, ',');
 			stringstream ss(property);
 			ss >> s.ID;
-
+			
 			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
 				flag = 1;
 			}
@@ -233,12 +244,48 @@ void adminDatabase() {
 	cout << "Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
 	cout << "Press 2 to view student full student database\n";// prints all data in the student database
 	cout << "Press 3 to edit class roles\n"; // opens options to add or remove students to class role by searching for their ID in the DB
-	cout << "Press 4 to edit class information\n"; // add or remove class, edit class name, tuition cost
-	cout << "Press 5 to assign student grades\n"; // add or change student grade for each class
-	cout << "Press 6 to log out\n"; // return to main and log out
+	cout << "Press 4 to assign student grades\n"; // add or change student grade for each class
+	cout << "Press 5 to log out\n"; // return to main and log out
 	cout << "Enter your choice: "; cin >> menuChoice;
 
+	switch (menuChoice) {
+	case 1: studentSearch();
+		break;
+	case 2: printDatabase();
+		break;
+	case 3: editRoll();
+		break;
+	case 4: gradeStudent();
+		break;
+	case 5:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	};
 }
+	void studentSearch() {
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		//if IDsearch == any ID on database, Cout all the student data line by line with formating.
+	}
+	void printDatabase() {
+		//prints database with formating
+	}
+	void editRoll() {
+		system("cls");
+		string classSearch;
+		"Search for class by class code (4 letters and 3 numbers): "; cin >> classSearch;
+		//if classSearch == any of the hardcoded classes, display all ID students in class, prompt options to remove or add student from data base --> upon choice, prompt to enter student ID (if in/not in list, student added/removed
+	}
+	void gradeStudent() {
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		//if IDsearch == ID on database, bring up student name. give option to select which class to add grade to (pull from classes on database that are assigned to the student)
+	}
+
+
 void studentDatabase() {
 	system("cls");
 	ShowHeader();
@@ -250,7 +297,50 @@ void studentDatabase() {
 	cout << "Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
 	cout << "Press 5 to log out\n"; cin >> menuChoice;// returns to main menu
 	cout << "Enter your choice\n"; cin >> menuChoice;
+
+	switch (menuChoice) {
+	case 1: editStudent();
+		break;
+	case 2: studentClassSum();
+		break;
+	case 3: StudentGradeSum();
+		break;
+	case 4: studentTuitionSum();
+		break;
+	case 5:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	};
+
 }
+
+void editStudent() {
+	//press 1 to edit PW
+	//2 to edit fname
+	//3 to edit lname
+	//4 to edit email
+	//5 parent fname
+	//6 parent lname
+	//7 parent contact no.
+	//8 to exit
+
+	//link to functions
+}
+void studentClassSum() {
+	//print details for all enrolled classes
+}
+void StudentGradeSum() {
+	//print grades for all enrolled classes along with a total grade average that converted to a grade letter scale system (50-60 = c, 60-70 = b, 70-80 ect)
+}
+void studentTuitionSum() {
+	// print out cost of each class and the total tuition cost for the year.
+}
+
+
+
+
+
 
 
 void ShowHeader() //the function which shows the header on each screen
@@ -278,4 +368,3 @@ void ShowHeader() //the function which shows the header on each screen
 	SetConsoleTextAttribute(color, 15);
 	return;
 }
-
