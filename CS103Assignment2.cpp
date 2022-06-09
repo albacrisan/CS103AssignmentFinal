@@ -9,22 +9,31 @@
 #include <Windows.h>
 #include <iomanip>
 #include <stdlib.h>
-#include<ctime> 
+#include <ctime> 
 #include <map>
-#include<cstdlib> //for exit() and system(“cls”) functions
-#include<cstring> //for all string functions
-#include<conio.h> //for getch() function
+#include <cstdlib> //for exit() and system(“cls”) functions
+#include <cstring> //for all string functions
+#include <conio.h> //for getch() function
 #include <sstream>
 using namespace std;
 
 struct Parent {
 	string fName;
-	string LName;
+	string lName;
 	long int contactNumber;
+	Parent(string fN = "FirstName", string lN = "LastName", long int cN = 0000000000) {
+		fName = fN;
+		lName = lN;
+		contactNumber = cN;
+	}
 };
 struct Teacher {
 	string fName;
 	string lName;
+	Teacher(string fN = "FirstName", string lN = "LastName") {
+		fName = fN;
+		lName = lN;
+	}
 
 };
 struct classStr {
@@ -32,32 +41,50 @@ struct classStr {
 	float studentGrade;
 	float courseCost;
 	Teacher teacher;
+	classStr(string c = "ClassCode", float sG = 0.5, float cC = 7000) {
+		code = c;
+		studentGrade = sG;
+		courseCost = cC;
+	}
 };
 
-struct Student {
+struct Student { // main struct, all others are nested within student, database will hold all student and class information somehow. maybe have seperate DB for classes?
 	long int ID;
-	string PW;
+	string Password;
 	string fName;
 	string lName;
+	string email;
 	Parent parent;
 	classStr class1;
 	classStr class2;
 	classStr class3;
 	classStr class4;
 
-	Student() {
-		ID = 0;
-		PW = "PW";
-		fName = "FirstName";
-		lName = "LastName";
+	Student(int id = 001122, string pw = "Password", string fN = "FirstName", string lN = "LastName", string em = "email@domain.com") {
+		ID = id;
+		Password = pw;
+		fName = fN;
+		lName = lN;
+		email = em;
 
 	}
 };
 
 vector <Student> Registration(vector<Student>& student);
-vector <Student> StudentLogin(vector<Student>& student);
+vector <Student> StudentLogin();
 void adminLogin();
 void adminDatabase();
+
+//admin Database menu option functions
+void studentSearch();
+void printDatabase();
+void editRoll();
+void gradeStudent();
+
+void editStudent();
+void studentClassSum();
+void StudentGradeSum();
+void studentTuitionSum();
 
 void ShowHeader();
 
@@ -76,7 +103,7 @@ int main() {
 		if (loginChoice == 1) {
 			cout << "\n\nDirecting to Student Login...";
 			Sleep(500);
-			StudentLogin(student);
+			StudentLogin();
 			break;
 		}
 		else if (loginChoice == 2) {
@@ -117,13 +144,13 @@ vector <Student> Registration(vector<Student>& student) {
 	Student s;
 	cout << "***Student Registration***\n\n";
 	cout << "Please Enter your Student ID (6 digit Number): "; cin >> s.ID;
-	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.PW;
+	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
 	cout << "Enter your first name: "; cin >> s.fName;
 	cout << "Enter your last name: "; cin >> s.lName;
 
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
-	StudentDatabase << s.ID << "," << s.PW << endl;
+	StudentDatabase << s.ID << "," << s.Password << endl;
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
 	Sleep(1000);
@@ -155,10 +182,8 @@ vector <Student> StudentLogin() {
 			getline(linestream, property, ',');
 			stringstream ss(property);
 			ss >> s.ID;
-
-		fstream StudentDatabase("stDB.csv", ios::in);
-		while (StudentDatabase >> s.ID >> s.PW) {
-			if (attemptID == s.ID && attemptPW == s.PW) {// not inputting the right variable for it to read off the spreadsheet
+			
+			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
 				flag = 1;
 			}
 		}
@@ -183,40 +208,139 @@ vector <Student> StudentLogin() {
 
 void adminLogin() {
 	system("cls");
-	int counter = 3;
+	int counter = 3, flag = 0;
 	long int adminID = 000000, enteredID;
 	string adminPW = "Password", enteredPW;
 	while (counter != 0) {
 		cout << "***Admin Login***\n";
 		cout << "Enter Admin ID: "; cin >> enteredID;
 		cout << "Enter Admin PW: "; cin >> enteredPW;
-		if (adminID == enteredID) {
-			cout << "\n\nLogin Successful\nWelcome admin. Opening Database now...";
+		if (adminID == enteredID && adminPW == enteredPW) {
+			flag = 1;
+		}
+		switch (flag) {
+		case 0:
+			counter--;
+			cout << "\nIncorrect ID or Password\n" << counter << " login attempts remaining\n";
+			break;
+
+		case 1:
+			cout << "\nLogin successfull\nDirecting you to database...\n";
 			Sleep(1000);
 			adminDatabase();
 			break;
-
-
-		}
-		else {
-			counter--;
-			cout << "\nInvalid ID or PW " << counter << " attempts remaining\n";
 		}
 	}
-	cout << "0 login attempts remaining\n Closing app...";
+	cout << "Closing app...\n\n\n\n";
+	Sleep(1000);
 	exit(3);
 }
 
 void adminDatabase() {
 	system("cls");
 	ShowHeader();
+	int menuChoice;
 	cout << "***Admin Database Access***\n\n";
+	cout << "Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
+	cout << "Press 2 to view student full student database\n";// prints all data in the student database
+	cout << "Press 3 to edit class roles\n"; // opens options to add or remove students to class role by searching for their ID in the DB
+	cout << "Press 4 to assign student grades\n"; // add or change student grade for each class
+	cout << "Press 5 to log out\n"; // return to main and log out
+	cout << "Enter your choice: "; cin >> menuChoice;
+
+	switch (menuChoice) {
+	case 1: studentSearch();
+		break;
+	case 2: printDatabase();
+		break;
+	case 3: editRoll();
+		break;
+	case 4: gradeStudent();
+		break;
+	case 5:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	};
 }
+	void studentSearch() {
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		//if IDsearch == any ID on database, Cout all the student data line by line with formating.
+	}
+	void printDatabase() {
+		//prints database with formating
+	}
+	void editRoll() {
+		system("cls");
+		string classSearch;
+		"Search for class by class code (4 letters and 3 numbers): "; cin >> classSearch;
+		//if classSearch == any of the hardcoded classes, display all ID students in class, prompt options to remove or add student from data base --> upon choice, prompt to enter student ID (if in/not in list, student added/removed
+	}
+	void gradeStudent() {
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		//if IDsearch == ID on database, bring up student name. give option to select which class to add grade to (pull from classes on database that are assigned to the student)
+	}
+
+
 void studentDatabase() {
 	system("cls");
 	ShowHeader();
+	int menuChoice;
 	cout << "***Student Database Access***\n\n";
+	cout << "Press 1 to edit person details\n"; //fname lname, email, parent details
+	cout << "Press 2 to view enrolled classess\n"; //brings to next menu that shows class 1,2,3,4 (name)
+	cout << "Press 3 to grade summary for the year\n"; // brings up grades for class 1,2,3,4
+	cout << "Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
+	cout << "Press 5 to log out\n"; cin >> menuChoice;// returns to main menu
+	cout << "Enter your choice\n"; cin >> menuChoice;
+
+	switch (menuChoice) {
+	case 1: editStudent();
+		break;
+	case 2: studentClassSum();
+		break;
+	case 3: StudentGradeSum();
+		break;
+	case 4: studentTuitionSum();
+		break;
+	case 5:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	};
+
 }
+
+void editStudent() {
+	//press 1 to edit PW
+	//2 to edit fname
+	//3 to edit lname
+	//4 to edit email
+	//5 parent fname
+	//6 parent lname
+	//7 parent contact no.
+	//8 to exit
+
+	//link to functions
+}
+void studentClassSum() {
+	//print details for all enrolled classes
+}
+void StudentGradeSum() {
+	//print grades for all enrolled classes along with a total grade average that converted to a grade letter scale system (50-60 = c, 60-70 = b, 70-80 ect)
+}
+void studentTuitionSum() {
+	// print out cost of each class and the total tuition cost for the year.
+}
+
+
+
+
+
 
 
 void ShowHeader() //the function which shows the header on each screen
@@ -244,4 +368,3 @@ void ShowHeader() //the function which shows the header on each screen
 	SetConsoleTextAttribute(color, 15);
 	return;
 }
-
