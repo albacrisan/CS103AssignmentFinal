@@ -74,6 +74,7 @@ vector <Student> Registration(vector<Student>& student);
 vector <Student> StudentLogin();
 void adminLogin();
 void adminDatabase();
+void studentDatabase();
 
 //admin Database menu option functions
 void studentSearch();
@@ -147,10 +148,11 @@ vector <Student> Registration(vector<Student>& student) {
 	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
 	cout << "Enter your first name: "; cin >> s.fName;
 	cout << "Enter your last name: "; cin >> s.lName;
-
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
-	StudentDatabase << s.ID << "," << s.Password << endl;
+	for (int i = 0; i < student.size(); i++) {
+		StudentDatabase << s.ID << "," << s.Password << endl;
+	}
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
 	Sleep(1000);
@@ -162,11 +164,11 @@ vector <Student> Registration(vector<Student>& student) {
 vector <Student> StudentLogin() {
 	system("cls");
 	ShowHeader();
-	vector<Student> tempStudent;
 	Student s;
 	string attemptPW;
 	long int attemptID;
 	int counter = 3, flag = 0;
+	vector<Student> tempStudent;
 	while (counter != 0) {
 		cout << "***Student Login***\n\n";
 		cout << "Enter ID: "; cin >> attemptID;
@@ -174,8 +176,8 @@ vector <Student> StudentLogin() {
 		string line;
 		string property;
 		fstream StudentDatabase("stDB.csv", ios::in);
-		while (getline(StudentDatabase, line, ',')) {
-			cout << line << endl;
+		vector<Student> tempStudent;
+		while (getline(StudentDatabase, line)) {
 			istringstream linestream(line);
 			getline(linestream, property, ',');
 			stringstream ss(property);
@@ -198,9 +200,10 @@ vector <Student> StudentLogin() {
 		case 1:
 			cout << "\nLogin successfull\nDirecting you to database...\n";
 			Sleep(1000);
+			studentDatabase();
 			break;
 		}
-		
+		StudentDatabase.close();
 	}
 	cout << "Closing app...\n\n\n\n";
 	Sleep(1000);
@@ -297,8 +300,8 @@ void studentDatabase() {
 	cout << "Press 2 to view enrolled classess\n"; //brings to next menu that shows class 1,2,3,4 (name)
 	cout << "Press 3 to grade summary for the year\n"; // brings up grades for class 1,2,3,4
 	cout << "Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
-	cout << "Press 5 to log out\n"; cin >> menuChoice;// returns to main menu
-	cout << "Enter your choice\n"; cin >> menuChoice;
+	cout << "Press 5 to log out\n";// returns to main menu
+	cout << "Enter your choice"; cin >> menuChoice;
 
 	switch (menuChoice) {
 	case 1: editStudent();
