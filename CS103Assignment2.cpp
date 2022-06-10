@@ -178,10 +178,11 @@ vector <Student> StudentLogin() {
 			cout << line << endl;
 			istringstream linestream(line);
 			getline(linestream, property, ',');
-			s.Password = property;
-			getline(linestream, property, ',');
 			stringstream ss(property);
 			ss >> s.ID;
+			getline(linestream, property, ',');
+			s.Password = property;
+			
 			
 			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
 				flag = 1;
