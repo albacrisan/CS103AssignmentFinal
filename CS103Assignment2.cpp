@@ -162,8 +162,8 @@ vector <Student> Registration(vector<Student>& student) {
 vector <Student> StudentLogin() {
 	system("cls");
 	ShowHeader();
-	Student s;
 	vector<Student> tempStudent;
+	Student s;
 	string attemptPW;
 	long int attemptID;
 	int counter = 3, flag = 0;
@@ -182,6 +182,7 @@ vector <Student> StudentLogin() {
 			ss >> s.ID;
 			getline(linestream, property, ',');
 			s.Password = property;
+			tempStudent.push_back(s);
 			
 			
 			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
@@ -199,7 +200,7 @@ vector <Student> StudentLogin() {
 			Sleep(1000);
 			break;
 		}
-		tempStudent.push_back(s);
+		
 	}
 	cout << "Closing app...\n\n\n\n";
 	Sleep(1000);
