@@ -151,7 +151,7 @@ vector <Student> Registration(vector<Student>& student) {
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
 	for (int i = 0; i < student.size(); i++) {
-		StudentDatabase << s.ID << "," << s.Password << endl;
+		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << endl;
 	}
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
@@ -184,10 +184,14 @@ vector <Student> StudentLogin() {
 			ss >> s.ID;
 			getline(linestream, property, ',');
 			s.Password = property;
+			getline(linestream, property, ',');
+			s.fName = property;
+			getline(linestream, property, ',');
+			s.lName = property;
 			tempStudent.push_back(s);
 			
 			
-			if (attemptID == s.ID && attemptPW == s.Password) {// not inputting the right variable for it to read off the spreadsheet
+			if (attemptID == s.ID && attemptPW == s.Password) {
 				flag = 1;
 			}
 		}
@@ -198,7 +202,7 @@ vector <Student> StudentLogin() {
 			break;
 
 		case 1:
-			cout << "\nLogin successfull\nDirecting you to database...\n";
+			cout << "\nLogin successfull. Welcome " << s.fName << " " << s.lName <<"\nDirecting you to your student database...\n";
 			Sleep(1000);
 			studentDatabase();
 			break;
