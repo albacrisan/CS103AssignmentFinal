@@ -72,12 +72,12 @@ struct Student { // main struct, all others are nested within student, database 
 
 vector <Student> Registration(vector<Student>& student);
 vector <Student> StudentLogin();
-void adminLogin();
-void adminDatabase();
+void adminLogin(vector<Student>& student);
+void adminDatabase(vector<Student>& student);
 void studentDatabase();
 
 //admin Database menu option functions
-void studentSearch();
+void studentSearch(vector<Student>& student);
 void printDatabase();
 void editRoll();
 void gradeStudent();
@@ -110,7 +110,7 @@ int main() {
 		else if (loginChoice == 2) {
 			cout << "\n\nDirecting to Admin Login...";
 			Sleep(500);
-			adminLogin();
+			adminLogin(student);
 			break;
 		}
 		else {
@@ -215,7 +215,7 @@ vector <Student> StudentLogin() {
 	return(tempStudent);
 }
 
-void adminLogin() {
+void adminLogin(vector<Student>& student) {
 	system("cls");
 	int counter = 3, flag = 0;
 	long int adminID = 000000, enteredID;
@@ -236,7 +236,7 @@ void adminLogin() {
 		case 1:
 			cout << "\nLogin successfull\nDirecting you to database...\n";
 			Sleep(1000);
-			adminDatabase();
+			adminDatabase(student);
 			break;
 		}
 	}
@@ -245,7 +245,7 @@ void adminLogin() {
 	exit(3);
 }
 
-void adminDatabase() {
+void adminDatabase(vector<Student>& student) {
 	system("cls");
 	ShowHeader();
 	int menuChoice;
@@ -258,7 +258,7 @@ void adminDatabase() {
 	cout << "Enter your choice: "; cin >> menuChoice;
 
 	switch (menuChoice) {
-	case 1: studentSearch();
+	case 1: studentSearch(student);
 		break;
 	case 2: printDatabase();
 		break;
@@ -272,11 +272,66 @@ void adminDatabase() {
 		main();
 	};
 }
-	void studentSearch() {
+ void studentSearch(vector<Student>& student) {
 		system("cls");
 		long int IDsearch;
 		cout << "Search for student by ID: "; cin >> IDsearch;
-		//if IDsearch == any ID on database, Cout all the student data line by line with formating.
+		Student s;
+		char searchChoice;
+		int flag = 0;
+		string line;
+		string property;
+		fstream StudentDatabase("stDB.csv", ios::in);
+		vector<Student> tempStudent;
+		while (getline(StudentDatabase, line)) {
+			istringstream linestream(line);
+			getline(linestream, property, ',');
+			stringstream ss(property);
+			ss >> s.ID;
+			getline(linestream, property, ',');
+			s.Password = property;
+			getline(linestream, property, ',');
+			s.fName = property;
+			getline(linestream, property, ',');
+			s.lName = property;
+
+			tempStudent.push_back(s);
+			if (s.ID == IDsearch) {
+				flag = 1;
+			}
+		}
+		switch (flag) {
+		case 0:
+			cout << "No student with ID: " << IDsearch << " was found\n";
+			cout << "Search again? Y/N: "; cin >> searchChoice;
+			if (searchChoice == 'y' || searchChoice == 'Y') {
+				studentSearch(student);
+			}
+			else {
+				cout << "\n Returning to Admin main menu...";
+				Sleep(1000);
+				adminDatabase(student);
+			}
+			break;
+		case 1:
+			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
+			Sleep(1000);
+			cout << "Student ID: " << s.ID<< endl;
+			cout << "Student Password: " << s.Password << endl;
+			cout << "First Name: " << s.fName << endl;
+			cout << "Last Name: " << s.lName << endl << endl;
+			
+			cout << "Search again? Y/N: "; cin >> searchChoice;
+			if (searchChoice == 'y' || searchChoice == 'Y') {
+				studentSearch(student);
+			}
+			else {
+				cout << "\n Returning to Admin main menu...";
+				Sleep(1000);
+				adminDatabase(student);
+			}
+			break;
+		}
 	}
 	void printDatabase() {
 		//prints database with formating
