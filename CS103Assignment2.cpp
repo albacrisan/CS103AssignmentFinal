@@ -148,10 +148,16 @@ vector <Student> Registration(vector<Student>& student) {
 	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
 	cout << "Enter your first name: "; cin >> s.fName;
 	cout << "Enter your last name: "; cin >> s.lName;
+	cout << "Enter you email address: "; cin >> s.email;
+	cout << endl << endl;
+	cout << "Emergency Contact Details\n\n";
+	cout << "Enter first name: "; cin >> s.parent.fName;
+	cout << "Enter last name: "; cin >> s.parent.lName;
+	cout << "Enter contact number: "; cin >> s.parent.contactNumber;
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
 	for (int i = 0; i < student.size(); i++) {
-		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << endl;
+		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName <<"," << s.parent.contactNumber << endl;
 	}
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
@@ -294,7 +300,15 @@ void adminDatabase(vector<Student>& student) {
 			s.fName = property;
 			getline(linestream, property, ',');
 			s.lName = property;
-
+			getline(linestream, property, ',');
+			s.email = property;
+			getline(linestream, property, ',');
+			s.parent.fName = property;
+			getline(linestream, property, ',');
+			s.parent.lName = property;
+			getline(linestream, property, ',');
+			stringstream sc(property);
+			sc >> s.parent.contactNumber;
 			tempStudent.push_back(s);
 			if (s.ID == IDsearch) {
 				flag = 1;
@@ -316,10 +330,24 @@ void adminDatabase(vector<Student>& student) {
 		case 1:
 			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
 			Sleep(1000);
+
+			cout << "Personal Contact Details\n\n";
 			cout << "Student ID: " << s.ID<< endl;
 			cout << "Student Password: " << s.Password << endl;
 			cout << "First Name: " << s.fName << endl;
-			cout << "Last Name: " << s.lName << endl << endl;
+			cout << "Last Name: " << s.lName << endl;
+			cout << "Email Address: " << s.email << endl << endl;
+
+			cout << "Emergency Contact Details\n\n";
+			cout << "First Name: " << s.parent.fName << endl;
+			cout << "Last Name: " << s.parent.lName << endl;
+			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+
+			cout << "Student Grades\n\n";
+			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << endl;
+			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << endl;
+			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << endl;
+			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << endl << endl;
 			
 			cout << "Search again? Y/N: "; cin >> searchChoice;
 			if (searchChoice == 'y' || searchChoice == 'Y') {
