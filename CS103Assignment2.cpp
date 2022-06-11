@@ -78,7 +78,7 @@ void studentDatabase();
 
 //admin Database menu option functions
 void studentSearch(vector<Student>& student);
-void printDatabase();
+void printDatabase(vector<Student>& student);
 void editRoll();
 void gradeStudent();
 
@@ -266,7 +266,7 @@ void adminDatabase(vector<Student>& student) {
 	switch (menuChoice) {
 	case 1: studentSearch(student);
 		break;
-	case 2: printDatabase();
+	case 2: printDatabase(student);
 		break;
 	case 3: editRoll();
 		break;
@@ -361,8 +361,33 @@ void adminDatabase(vector<Student>& student) {
 			break;
 		}
 	}
-	void printDatabase() {
-		//prints database with formating
+	void printDatabase(vector<Student>& student) {
+		cout << "Printing full Database...\n\n\n\n";
+		Sleep(1000);
+		Student s;
+		for (int i = 0; i < student.size(); i++) { //not looping even once {is in not reciving data from student database??
+			cout << "Personal Contact Details\n\n";
+			cout << "Student ID: " << s.ID << endl;
+			cout << "Student Password: " << s.Password << endl;
+			cout << "First Name: " << s.fName << endl;
+			cout << "Last Name: " << s.lName << endl;
+			cout << "Email Address: " << s.email << endl << endl;
+
+			cout << "Emergency Contact Details\n\n";
+			cout << "First Name: " << s.parent.fName << endl;
+			cout << "Last Name: " << s.parent.lName << endl;
+			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+
+			cout << "Student Grades\n\n";
+			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "\tClass Tuition: " << s.class1.courseCost << endl;
+			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "\tClass Tuition: " << s.class2.courseCost << endl;
+			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "\tClass Tuition: " << s.class3.courseCost << endl;
+			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "\tClass Tuition: " << s.class4.courseCost << endl << endl;
+		}
+
+
+
+
 	}
 	void editRoll() {
 		system("cls");
