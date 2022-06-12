@@ -278,7 +278,7 @@ void adminDatabase(vector<Student>& student) {
 		main();
 	};
 }
- void studentSearch(vector<Student>& student) {
+ void studentSearch(vector<Student>& student) { // doesnt bring up the student with matching ID always gives 456789ID
 		system("cls");
 		long int IDsearch;
 		cout << "Search for student by ID: "; cin >> IDsearch;
@@ -364,7 +364,7 @@ void adminDatabase(vector<Student>& student) {
 			}
 			break;
 		case 1:
-			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
+			cout << "\nStudent " << IDsearch << " found\nFinding student data...\n\n\n";
 			Sleep(1000);
 
 			cout << "Personal Contact Details\n\n";
@@ -588,7 +588,7 @@ void adminDatabase(vector<Student>& student) {
 			}
 			break;
 		case 1:
-			cout << "\nStudent " << s.ID << " found\nFinding student grades...\n\n\n";
+			cout << "\nStudent " << IDsearch << " " << s.fName << " " << s.lName << " found\nFinding student grades...\n\n\n";
 			Sleep(1000);
 			cout << "Student Grades: \n\n";
 			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "%" << endl;
@@ -597,33 +597,36 @@ void adminDatabase(vector<Student>& student) {
 			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "%" << endl << endl;
 			break;
 		}
-		StudentDatabase.close(); //check this in right place
 		int classSelect;
 		int gradeChange;
+		
 		cout << "\n\nWhich class are you adding/changing a grade for?\nPress 1 for: " << s.class1.code << "\nPress 2 for: " << s.class2.code << "\nPress 3 for: " << s.class3.code << "\nPress 4 for: " << s.class4.code << endl;
 		cout << "Select class: "; cin >> classSelect;
-		fstream("stDB.csv", ios::app); //open file to change value of grade
 		switch (classSelect) {
 		case 1:
 			cout << "Enter new grade for class 1: "; cin >> gradeChange;
 			//add code to find s.class1.code on DB and change it to value given as gradeChange
-			s.class1.code = gradeChange; //surely cant be this simple -- its not - doesnt change it at all
+			s.class1.studentGrade = gradeChange; //surely cant be this simple -- its not - doesnt change it at all
+			StudentDatabase << s.class1.studentGrade << endl;
 			cout << "Grade successfully updated\n\n";
 			break;
 		case 2:
 			cout << "Enter new grade for class 2: "; cin >> gradeChange;
-			s.class2.code = gradeChange;
+			s.class2.studentGrade = gradeChange;
+			StudentDatabase << s.class2.studentGrade << endl;
 			cout << "Grade successfully updated\n\n";
 
 			break;
 		case 3:
 			cout << "Enter new grade for class 3: "; cin >> gradeChange;
-			s.class3.code = gradeChange;
+			s.class3.studentGrade = gradeChange;
+			StudentDatabase << s.class3.studentGrade << endl;
 			cout << "Grade successfully updated\n\n";
 			break;
 		case 4:
 			cout << "Enter new grade for class 4: "; cin >> gradeChange;
-			s.class4.code = gradeChange;
+			s.class4.studentGrade = gradeChange;
+			StudentDatabase << s.class4.studentGrade << endl;
 			cout << "Grade successfully updated\n\n";
 			break;
 		default:
@@ -631,6 +634,17 @@ void adminDatabase(vector<Student>& student) {
 			gradeStudent(student);
 		}
 		StudentDatabase.close();
+		char anotherChar;
+		cout << "Update Another Grade? y/n: "; cin >> anotherChar;
+		if (anotherChar == 'y' || anotherChar == 'Y') {
+			gradeStudent(student);
+		}
+		else {
+			cout << "\n\nDirecting to Admin Menu...";
+			Sleep(1000);
+			adminDatabase(student);
+		}
+		
 	}
 
 void studentDatabase() {
