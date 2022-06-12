@@ -70,6 +70,68 @@ struct Student { // main struct, all others are nested within student, database 
 	}
 };
 
+
+// for the course info
+
+struct CourseRecord {
+public:
+	CourseRecord(  //courseID, coursename, semester, YEAR, costlocal, costinternational, teacher per file
+		string id,
+		string courseName,
+		string semester,
+		int yEAR,
+		double costLocal,
+		double costInternational,
+		string teacher
+
+	)
+
+	{
+
+		Id = id; // courseID
+		CourseName = courseName; // coursename
+		Semester = semester; // semester
+		YEAR = yEAR;
+		CostLocal = costLocal;
+		CostInternational = costInternational;
+		Teacher = teacher;
+	}
+
+
+void display() {
+		HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(color, 10);
+		cout << "Course ID and name: " << Id << " " << CourseName;
+		SetConsoleTextAttribute(color, 8);
+		cout << " Teacher: " << Teacher << endl;
+		SetConsoleTextAttribute(color, 7);
+		cout << "Year: " << YEAR << " - " << Semester << " ";
+		SetConsoleTextAttribute(color, 13);
+		cout << "---> Course Cost local: NZD$" << CostLocal << " and international cost: NZD$" << CostInternational << endl;
+		cout << endl;
+	}
+
+	string Id;
+	string CourseName;
+	string Semester;
+	int YEAR;
+	double CostLocal;
+	double CostInternational;
+	string Teacher;
+
+};
+
+void displayCourses(vector<CourseRecord>& courses) {
+
+	for (auto course : courses) {
+		course.display();
+	}
+}
+// course info ends
+
+
+
+
 vector <Student> Registration(vector<Student>& student);
 vector <Student> StudentLogin();
 void adminLogin(vector<Student>& student);
@@ -88,6 +150,9 @@ void StudentGradeSum();
 void studentTuitionSum();
 
 void ShowHeader();
+
+void studentAvailableCourses();
+void endMenuchoise();
 
 int main() {
 
@@ -157,7 +222,7 @@ vector <Student> Registration(vector<Student>& student) {
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
 	for (int i = 0; i < student.size(); i++) {
-		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName <<"," << s.parent.contactNumber << endl;
+		StudentDatabase << s.ID << "," << s.Password << "," << s.fName << "," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName << "," << s.parent.contactNumber << endl;
 	}
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
@@ -195,8 +260,8 @@ vector <Student> StudentLogin() {
 			getline(linestream, property, ',');
 			s.lName = property;
 			tempStudent.push_back(s);
-			
-			
+
+
 			if (attemptID == s.ID && attemptPW == s.Password) {
 				flag = 1;
 			}
@@ -208,7 +273,7 @@ vector <Student> StudentLogin() {
 			break;
 
 		case 1:
-			cout << "\nLogin successfull. Welcome " << s.fName << " " << s.lName <<"\nDirecting you to your student database...\n";
+			cout << "\nLogin successfull. Welcome " << s.fName << " " << s.lName << "\nDirecting you to your student database...\n";
 			Sleep(1000);
 			studentDatabase();
 			break;
@@ -278,129 +343,129 @@ void adminDatabase(vector<Student>& student) {
 		main();
 	};
 }
- void studentSearch(vector<Student>& student) {
-		system("cls");
-		long int IDsearch;
-		cout << "Search for student by ID: "; cin >> IDsearch;
-		Student s;
-		char searchChoice;
-		int flag = 0;
-		string line;
-		string property;
-		fstream StudentDatabase("stDB.csv", ios::in);
-		vector<Student> tempStudent;
-		while (getline(StudentDatabase, line)) {
-			istringstream linestream(line);
-			getline(linestream, property, ',');
-			stringstream ss(property);
-			ss >> s.ID;
-			getline(linestream, property, ',');
-			s.Password = property;
-			getline(linestream, property, ',');
-			s.fName = property;
-			getline(linestream, property, ',');
-			s.lName = property;
-			getline(linestream, property, ',');
-			s.email = property;
-			getline(linestream, property, ',');
-			s.parent.fName = property;
-			getline(linestream, property, ',');
-			s.parent.lName = property;
-			getline(linestream, property, ',');
-			stringstream sc(property);
-			sc >> s.parent.contactNumber;
-			tempStudent.push_back(s);
-			if (s.ID == IDsearch) {
-				flag = 1;
-			}
+void studentSearch(vector<Student>& student) {
+	system("cls");
+	long int IDsearch;
+	cout << "Search for student by ID: "; cin >> IDsearch;
+	Student s;
+	char searchChoice;
+	int flag = 0;
+	string line;
+	string property;
+	fstream StudentDatabase("stDB.csv", ios::in);
+	vector<Student> tempStudent;
+	while (getline(StudentDatabase, line)) {
+		istringstream linestream(line);
+		getline(linestream, property, ',');
+		stringstream ss(property);
+		ss >> s.ID;
+		getline(linestream, property, ',');
+		s.Password = property;
+		getline(linestream, property, ',');
+		s.fName = property;
+		getline(linestream, property, ',');
+		s.lName = property;
+		getline(linestream, property, ',');
+		s.email = property;
+		getline(linestream, property, ',');
+		s.parent.fName = property;
+		getline(linestream, property, ',');
+		s.parent.lName = property;
+		getline(linestream, property, ',');
+		stringstream sc(property);
+		sc >> s.parent.contactNumber;
+		tempStudent.push_back(s);
+		if (s.ID == IDsearch) {
+			flag = 1;
 		}
-		switch (flag) {
-		case 0:
-			cout << "No student with ID: " << IDsearch << " was found\n";
-			cout << "Search again? Y/N: "; cin >> searchChoice;
-			if (searchChoice == 'y' || searchChoice == 'Y') {
-				studentSearch(student);
-			}
-			else {
-				cout << "\n Returning to Admin main menu...";
-				Sleep(1000);
-				adminDatabase(student);
-			}
-			break;
-		case 1:
-			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
+	}
+	switch (flag) {
+	case 0:
+		cout << "No student with ID: " << IDsearch << " was found\n";
+		cout << "Search again? Y/N: "; cin >> searchChoice;
+		if (searchChoice == 'y' || searchChoice == 'Y') {
+			studentSearch(student);
+		}
+		else {
+			cout << "\n Returning to Admin main menu...";
 			Sleep(1000);
-
-			cout << "Personal Contact Details\n\n";
-			cout << "Student ID: " << s.ID<< endl;
-			cout << "Student Password: " << s.Password << endl;
-			cout << "First Name: " << s.fName << endl;
-			cout << "Last Name: " << s.lName << endl;
-			cout << "Email Address: " << s.email << endl << endl;
-
-			cout << "Emergency Contact Details\n\n";
-			cout << "First Name: " << s.parent.fName << endl;
-			cout << "Last Name: " << s.parent.lName << endl;
-			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
-
-			cout << "Student Grades\n\n";
-			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << endl;
-			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << endl;
-			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << endl;
-			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << endl << endl;
-			
-			cout << "Search again? Y/N: "; cin >> searchChoice;
-			if (searchChoice == 'y' || searchChoice == 'Y') {
-				studentSearch(student);
-			}
-			else {
-				cout << "\n Returning to Admin main menu...";
-				Sleep(1000);
-				adminDatabase(student);
-			}
-			break;
+			adminDatabase(student);
 		}
-	}
-	void printDatabase(vector<Student>& student) {
-		cout << "Printing full Database...\n\n\n\n";
+		break;
+	case 1:
+		cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
 		Sleep(1000);
-		Student s;
-		for (int i = 0; i < student.size(); i++) { //not looping even once {is in not reciving data from student database??
-			cout << "Personal Contact Details\n\n";
-			cout << "Student ID: " << s.ID << endl;
-			cout << "Student Password: " << s.Password << endl;
-			cout << "First Name: " << s.fName << endl;
-			cout << "Last Name: " << s.lName << endl;
-			cout << "Email Address: " << s.email << endl << endl;
 
-			cout << "Emergency Contact Details\n\n";
-			cout << "First Name: " << s.parent.fName << endl;
-			cout << "Last Name: " << s.parent.lName << endl;
-			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+		cout << "Personal Contact Details\n\n";
+		cout << "Student ID: " << s.ID << endl;
+		cout << "Student Password: " << s.Password << endl;
+		cout << "First Name: " << s.fName << endl;
+		cout << "Last Name: " << s.lName << endl;
+		cout << "Email Address: " << s.email << endl << endl;
 
-			cout << "Student Grades\n\n";
-			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "\tClass Tuition: " << s.class1.courseCost << endl;
-			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "\tClass Tuition: " << s.class2.courseCost << endl;
-			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "\tClass Tuition: " << s.class3.courseCost << endl;
-			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "\tClass Tuition: " << s.class4.courseCost << endl << endl;
+		cout << "Emergency Contact Details\n\n";
+		cout << "First Name: " << s.parent.fName << endl;
+		cout << "Last Name: " << s.parent.lName << endl;
+		cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+
+		cout << "Student Grades\n\n";
+		cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << endl;
+		cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << endl;
+		cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << endl;
+		cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << endl << endl;
+
+		cout << "Search again? Y/N: "; cin >> searchChoice;
+		if (searchChoice == 'y' || searchChoice == 'Y') {
+			studentSearch(student);
 		}
-
-
-
-
+		else {
+			cout << "\n Returning to Admin main menu...";
+			Sleep(1000);
+			adminDatabase(student);
+		}
+		break;
 	}
-	void editRoll() {
-		system("cls");
-		string classSearch;
-		"Search for class by class code (4 letters and 3 numbers): "; cin >> classSearch;
-		//if classSearch == any of the hardcoded classes, display all ID students in class, prompt options to remove or add student from data base --> upon choice, prompt to enter student ID (if in/not in list, student added/removed
+}
+void printDatabase(vector<Student>& student) {
+	cout << "Printing full Database...\n\n\n\n";
+	Sleep(1000);
+	Student s;
+	for (int i = 0; i < student.size(); i++) { //not looping even once {is in not reciving data from student database??
+		cout << "Personal Contact Details\n\n";
+		cout << "Student ID: " << s.ID << endl;
+		cout << "Student Password: " << s.Password << endl;
+		cout << "First Name: " << s.fName << endl;
+		cout << "Last Name: " << s.lName << endl;
+		cout << "Email Address: " << s.email << endl << endl;
+
+		cout << "Emergency Contact Details\n\n";
+		cout << "First Name: " << s.parent.fName << endl;
+		cout << "Last Name: " << s.parent.lName << endl;
+		cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+
+		cout << "Student Grades\n\n";
+		cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "\tClass Tuition: " << s.class1.courseCost << endl;
+		cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "\tClass Tuition: " << s.class2.courseCost << endl;
+		cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "\tClass Tuition: " << s.class3.courseCost << endl;
+		cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "\tClass Tuition: " << s.class4.courseCost << endl << endl;
 	}
-	void gradeStudent() {
-		system("cls");
-		long int IDsearch;
-		cout << "Search for student by ID: "; cin >> IDsearch;
-		//if IDsearch == ID on database, bring up student name. give option to select which class to add grade to (pull from classes on database that are assigned to the student)
-	}
+
+
+
+
+}
+void editRoll() {
+	system("cls");
+	string classSearch;
+	"Search for class by class code (4 letters and 3 numbers): "; cin >> classSearch;
+	//if classSearch == any of the hardcoded classes, display all ID students in class, prompt options to remove or add student from data base --> upon choice, prompt to enter student ID (if in/not in list, student added/removed
+}
+void gradeStudent() {
+	system("cls");
+	long int IDsearch;
+	cout << "Search for student by ID: "; cin >> IDsearch;
+	//if IDsearch == ID on database, bring up student name. give option to select which class to add grade to (pull from classes on database that are assigned to the student)
+}
 
 
 void studentDatabase() {
@@ -412,7 +477,8 @@ void studentDatabase() {
 	cout << "Press 2 to view enrolled classess\n"; //brings to next menu that shows class 1,2,3,4 (name)
 	cout << "Press 3 to grade summary for the year\n"; // brings up grades for class 1,2,3,4
 	cout << "Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
-	cout << "Press 5 to log out\n";// returns to main menu
+	cout << "Press 5 to see all courses available this semester\n";// opens a list of all available courses
+	cout << "Press 6 to log out\n";// returns to main menu
 	cout << "Enter your choice"; cin >> menuChoice;
 
 	switch (menuChoice) {
@@ -424,7 +490,9 @@ void studentDatabase() {
 		break;
 	case 4: studentTuitionSum();
 		break;
-	case 5:
+	case 5: studentAvailableCourses();
+		break;
+	case 6:
 		cout << "\n\nLogging out\nReturning to main menu...";
 		Sleep(1000);
 		main();
@@ -455,6 +523,91 @@ void studentTuitionSum() {
 }
 
 
+void studentAvailableCourses() // this is case 5 in the main student area
+{
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	system("cls");
+	ShowHeader();
+	
+
+	ifstream inputFile;
+	inputFile.open("courses.csv"); //courseID, coursename, semester, YEAR, costlocal, costinternational
+	string line = "";
+
+	vector<CourseRecord> Courses;
+	while (getline(inputFile, line)) {
+
+		stringstream inputString(line);
+
+		//courseID, coursename, semester, YEAR, costlocal, costinternational, teacher per file
+		string id;
+		string courseName;
+		string semester;
+		int yEAR;
+		double costLocal;
+		double costInternational;
+		string teacher;
+		string tempString;
+
+		getline(inputString, id, ',');
+		getline(inputString, courseName, ',');
+		getline(inputString, semester, ',');
+		getline(inputString, tempString, ',');
+		yEAR = atoi(tempString.c_str());
+		getline(inputString, tempString, ',');
+		costLocal = atof(tempString.c_str());
+		getline(inputString, tempString, ',');
+		costInternational = atof(tempString.c_str());
+		getline(inputString, teacher, ',');
+
+
+		CourseRecord course(id, courseName, semester, yEAR, costLocal, costInternational, teacher);
+		Courses.push_back(course);
+		line = "";
+	}
+
+	displayCourses(Courses);
+	inputFile.close();
+
+
+	SetConsoleTextAttribute(color, 7);
+	
+	Sleep(1000);
+	endMenuchoise();
+
+
+}
+
+
+void endMenuchoise() // this is for the student
+{
+	int menuChoiceStudent;
+	cout << "*** Student Database Access*** \n\n";
+	cout << "Press 1 to return to the student database\n"; // returns to student database
+	cout << "Press 2 to return to the main menu\n"; // returns to main menu
+	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
+	cout << "Enter your choice"; cin >> menuChoiceStudent;
+
+	switch (menuChoiceStudent) {
+	case 1:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		studentDatabase();
+	case 2:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	case 3:
+		cout << "\n\nClosing App...";
+		Sleep(500);
+		exit(1);
+	default:
+		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
+		Sleep(500);
+		exit(1);
+	};
+
+}
 
 
 
