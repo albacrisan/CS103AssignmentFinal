@@ -41,7 +41,7 @@ struct classStr {
 	float studentGrade;
 	float courseCost;
 	Teacher teacher;
-	classStr(string c = "ClassCode", float sG = 0.5, float cC = 7000) {
+	classStr(string c = "ClassCode", float sG = 0, float cC = 7000) {
 		code = c;
 		studentGrade = sG;
 		courseCost = cC;
@@ -142,7 +142,7 @@ void studentDatabase();
 void studentSearch(vector<Student>& student);
 void printDatabase(vector<Student>& student);
 void editRoll();
-void gradeStudent();
+void gradeStudent(vector<Student>& student);
 
 void editStudent();
 void studentClassSum();
@@ -222,7 +222,9 @@ vector <Student> Registration(vector<Student>& student) {
 	student.push_back(s);
 	fstream StudentDatabase("stDB.csv", ios::app);
 	for (int i = 0; i < student.size(); i++) {
-		StudentDatabase << s.ID << "," << s.Password << "," << s.fName << "," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName << "," << s.parent.contactNumber << endl;
+
+		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName << "," << s.parent.contactNumber << "," << s.class1.code << "," << s.class1.studentGrade << "," << s.class1.courseCost << "," << s.class2.code << "," << s.class2.studentGrade << "," << s.class2.courseCost << "," << s.class3.code << "," << s.class3.studentGrade << "," << s.class3.courseCost << "," << s.class4.code << "," << s.class4.studentGrade << "," << s.class4.courseCost << "," << endl;
+
 	}
 	StudentDatabase.close();
 	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
@@ -335,7 +337,7 @@ void adminDatabase(vector<Student>& student) {
 		break;
 	case 3: editRoll();
 		break;
-	case 4: gradeStudent();
+	case 4: gradeStudent(student);
 		break;
 	case 5:
 		cout << "\n\nLogging out\nReturning to main menu...";
@@ -343,6 +345,344 @@ void adminDatabase(vector<Student>& student) {
 		main();
 	};
 }
+
+ void studentSearch(vector<Student>& student) { // doesnt bring up the student with matching ID always gives 456789ID
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		Student s;
+		char searchChoice;
+		int flag = 0;
+		string line;
+		string property;
+		fstream StudentDatabase("stDB.csv", ios::in);
+		vector<Student> tempStudent;
+		while (getline(StudentDatabase, line)) {
+			istringstream linestream(line);
+			getline(linestream, property, ',');
+			stringstream ss(property);
+			ss >> s.ID;
+			getline(linestream, property, ',');
+			s.Password = property;
+			getline(linestream, property, ',');
+			s.fName = property;
+			getline(linestream, property, ',');
+			s.lName = property;
+			getline(linestream, property, ',');
+			s.email = property;
+			getline(linestream, property, ',');
+			s.parent.fName = property;
+			getline(linestream, property, ',');
+			s.parent.lName = property;
+			getline(linestream, property, ',');
+			stringstream sc(property);
+
+			getline(linestream, property, ',');
+			s.class1.code = property;
+			getline(linestream, property, ',');
+			stringstream aCG(property);
+			aCG >> s.class1.studentGrade;
+			getline(linestream, property, ',');
+			stringstream aCC(property);
+			aCC >> s.class1.courseCost;
+
+			getline(linestream, property, ',');
+			s.class2.code = property;
+			getline(linestream, property, ',');
+			stringstream bCG(property);
+			bCG >> s.class2.studentGrade;
+			getline(linestream, property, ',');
+			stringstream bCC(property);
+			bCC >> s.class2.courseCost;
+
+			getline(linestream, property, ',');
+			s.class3.code = property;
+			getline(linestream, property, ',');
+			stringstream cCG(property);
+			cCG >> s.class3.studentGrade;
+			getline(linestream, property, ',');
+			stringstream cCC(property);
+			cCC >> s.class3.courseCost;
+
+			getline(linestream, property, ',');
+			s.class4.code = property;
+			getline(linestream, property, ',');
+			stringstream dCG(property);
+			dCG >> s.class4.studentGrade;
+			getline(linestream, property, ',');
+			stringstream dCC(property);
+			dCC >> s.class4.courseCost;
+			sc >> s.parent.contactNumber;
+			tempStudent.push_back(s);
+			if (s.ID == IDsearch) {
+				flag = 1;
+			}
+		}
+		switch (flag) {
+		case 0:
+			cout << "No student with ID: " << IDsearch << " was found\n";
+			cout << "Search again? Y/N: "; cin >> searchChoice;
+			if (searchChoice == 'y' || searchChoice == 'Y') {
+				studentSearch(student);
+			}
+			else {
+				cout << "\n Returning to Admin main menu...";
+				Sleep(1000);
+				adminDatabase(student);
+			}
+			break;
+		case 1:
+			cout << "\nStudent " << IDsearch << " found\nFinding student data...\n\n\n";
+			Sleep(1000);
+
+			cout << "Personal Contact Details\n\n";
+			cout << "Student ID: " << s.ID<< endl;
+			cout << "Student Password: " << s.Password << endl;
+			cout << "First Name: " << s.fName << endl;
+			cout << "Last Name: " << s.lName << endl;
+			cout << "Email Address: " << s.email << endl << endl;
+
+			cout << "Emergency Contact Details\n\n";
+			cout << "First Name: " << s.parent.fName << endl;
+			cout << "Last Name: " << s.parent.lName << endl;
+			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+
+			cout << "Student Grades\n\n";
+			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "%" << endl;
+			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "%" << endl;
+			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "%" << endl;
+			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "%" << endl << endl;
+			
+			cout << "Search again? Y/N: "; cin >> searchChoice;
+			if (searchChoice == 'y' || searchChoice == 'Y') {
+				studentSearch(student);
+			}
+			else {
+				cout << "\n Returning to Admin main menu...";
+				Sleep(1000);
+				adminDatabase(student);
+			}
+			break;
+		}
+	}
+	void printDatabase(vector<Student>& student) { //doesnt give the correct defaults for grade,coursecode or tution cost -- are these initialized anywhere?? also loops back to login as admin once its finished coding. //add intialized struct values onto DB
+		cout << "Printing full Database...\n\n\n\n"; 
+		Sleep(1000); 
+		string line;
+		Student s;
+		string property;
+		fstream StudentDatabase("stDB.csv", ios::in);
+		vector<Student> tempStudent;
+		while (getline(StudentDatabase, line)) {
+			istringstream linestream(line);
+			getline(linestream, property, ',');
+			stringstream ss(property);
+			ss >> s.ID;
+			getline(linestream, property, ',');
+			s.Password = property;
+			getline(linestream, property, ',');
+			s.fName = property;
+			getline(linestream, property, ',');
+			s.lName = property;
+			getline(linestream, property, ',');
+			s.email = property;
+			getline(linestream, property, ',');
+			s.parent.fName = property;
+			getline(linestream, property, ',');
+			s.parent.lName = property;
+			getline(linestream, property, ',');
+			stringstream sc(property);
+			sc >> s.parent.contactNumber;
+			                                                                      //if we dont try and pull from DB when there is nothing written then its fine. but what happens if there is something written?
+			getline(linestream, property, ',');
+			s.class1.code = property; 
+			getline(linestream, property, ',');
+			stringstream aCG(property); 
+			aCG >> s.class1.studentGrade; 
+			getline(linestream, property, ',');
+			stringstream aCC(property);  
+			aCC >> s.class1.courseCost; 
+
+			getline(linestream, property, ',');
+			s.class2.code = property; 
+			getline(linestream, property, ',');
+			stringstream bCG(property); 
+			bCG >> s.class2.studentGrade; 
+			getline(linestream, property, ',');
+			stringstream bCC(property);
+			bCC >> s.class2.courseCost;
+
+			getline(linestream, property, ',');
+			s.class3.code = property; 
+			getline(linestream, property, ',');
+			stringstream cCG(property);
+			cCG >> s.class3.studentGrade;
+			getline(linestream, property, ',');
+			stringstream cCC(property);
+			cCC >> s.class3.courseCost;
+			
+			getline(linestream, property, ',');
+			s.class4.code = property; 
+			getline(linestream, property, ',');
+			stringstream dCG(property);
+			dCG >> s.class4.studentGrade;
+			getline(linestream, property, ',');
+			stringstream dCC(property);
+			dCC >> s.class4.courseCost;
+			
+			tempStudent.push_back(s);
+		}
+		for (int i = 0; i < tempStudent.size(); i++) { 
+			cout << "Student " << tempStudent[i].ID << ":\n\n";
+
+			cout << "Personal Contact Details: \n\n";
+			cout << "Student ID: " << tempStudent[i].ID << endl;
+			cout << "Student Password: " << tempStudent[i].Password << endl;
+			cout << "First Name: " << tempStudent[i].fName << endl;
+			cout << "Last Name: " << tempStudent[i].lName << endl;
+			cout << "Email Address: " << tempStudent[i].email << endl << endl;
+
+			cout << "Emergency Contact Details: \n\n";
+			cout << "First Name: " << tempStudent[i].parent.fName << endl;
+			cout << "Last Name: " << tempStudent[i].parent.lName << endl;
+			cout << "Contact Number: " << tempStudent[i].parent.contactNumber << endl << endl;
+
+			cout << "Student Grades: \n\n";
+			cout << "Class 1: " << tempStudent[i].class1.code << "\tGrade: " << tempStudent[i].class1.studentGrade << "%" << "\tClass Tuition: $" << tempStudent[i].class1.courseCost << endl;
+			cout << "Class 2: " << tempStudent[i].class2.code << "\tGrade: " << tempStudent[i].class2.studentGrade << "%" << "\tClass Tuition: $" << tempStudent[i].class2.courseCost << endl;
+			cout << "Class 3: " << tempStudent[i].class3.code << "\tGrade: " << tempStudent[i].class3.studentGrade << "%" << "\tClass Tuition: $" << tempStudent[i].class3.courseCost << endl;
+			cout << "Class 4: " << tempStudent[i].class4.code << "\tGrade: " << tempStudent[i].class4.studentGrade << "%" << "\tClass Tuition: $" << tempStudent[i].class4.courseCost << endl << endl;
+		}
+		char returnMain;
+		cout << "Press x to return to Admin Main Menu: "; cin >> returnMain;
+		if (returnMain == 'x' || returnMain == 'X') {
+			adminDatabase(student);
+		}
+		else {
+			cout << "\nInvalid input. Press x to return to main menu";
+		}
+	}
+
+
+	void editRoll() {
+		system("cls");
+		string classSearch;
+		"Search for class by class code (4 letters and 3 numbers): "; cin >> classSearch;
+		//if classSearch == any of the hardcoded classes, display all ID students in class, prompt options to remove or add student from data base --> upon choice, prompt to enter student ID (if in/not in list, student added/removed
+	}
+	void gradeStudent(vector<Student>& student) {
+		system("cls");
+		long int IDsearch;
+		cout << "Search for student by ID: "; cin >> IDsearch;
+		Student s;
+		char searchChoice;
+		int flag = 0, i;
+		string line;
+		string property;
+		fstream StudentDatabase("stDB.csv", ios::in);
+		vector<Student> tempStudent;
+		while (getline(StudentDatabase, line)) {
+			istringstream linestream(line);
+			getline(linestream, property, ',');
+			stringstream ss(property);
+			ss >> s.ID;
+			getline(linestream, property, ',');
+			s.Password = property;
+			getline(linestream, property, ',');
+			s.fName = property;
+			getline(linestream, property, ',');
+			s.lName = property;
+			getline(linestream, property, ',');
+			s.email = property;
+			getline(linestream, property, ',');
+			s.parent.fName = property;
+			getline(linestream, property, ',');
+			s.parent.lName = property;
+			getline(linestream, property, ',');
+			stringstream sc(property);
+
+			getline(linestream, property, ',');
+			s.class1.code = property;
+			getline(linestream, property, ',');
+			stringstream aCG(property);
+			aCG >> s.class1.studentGrade;
+			getline(linestream, property, ',');
+			stringstream aCC(property);
+			aCC >> s.class1.courseCost;
+
+			getline(linestream, property, ',');
+			s.class2.code = property;
+			getline(linestream, property, ',');
+			stringstream bCG(property);
+			bCG >> s.class2.studentGrade;
+			getline(linestream, property, ',');
+			stringstream bCC(property);
+			bCC >> s.class2.courseCost;
+
+			getline(linestream, property, ',');
+			s.class3.code = property;
+			getline(linestream, property, ',');
+			stringstream cCG(property);
+			cCG >> s.class3.studentGrade;
+			getline(linestream, property, ',');
+			stringstream cCC(property);
+			cCC >> s.class3.courseCost;
+
+			getline(linestream, property, ',');
+			s.class4.code = property;
+			getline(linestream, property, ',');
+			stringstream dCG(property);
+			dCG >> s.class4.studentGrade;
+			getline(linestream, property, ',');
+			stringstream dCC(property);
+			dCC >> s.class4.courseCost;
+			sc >> s.parent.contactNumber;
+			tempStudent.push_back(s);
+			if (s.ID == IDsearch) {
+				flag = 1;
+			}
+		}
+		switch (flag) {
+		case 0:
+			cout << "No student with ID: " << IDsearch << " was found\n";
+			cout << "Search again? Y/N: "; cin >> searchChoice;
+			if (searchChoice == 'y' || searchChoice == 'Y') {
+				gradeStudent(student);
+			}
+			else {
+				cout << "\n Returning to Admin main menu...";
+				Sleep(1000);
+				adminDatabase(student);
+			}
+			break;
+		case 1:
+			cout << "\nStudent " << IDsearch << " " << s.fName << " " << s.lName << " found\nFinding student grades...\n\n\n";
+			Sleep(1000);
+			cout << "Student Grades: \n\n";
+			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "%" << endl;
+			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "%" << endl;
+			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "%" << endl;
+			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "%" << endl << endl;
+			break;
+		}
+		int classSelect;
+		int gradeChange;
+		
+		cout << "\n\nWhich class are you adding/changing a grade for?\nPress 1 for: " << s.class1.code << "\nPress 2 for: " << s.class2.code << "\nPress 3 for: " << s.class3.code << "\nPress 4 for: " << s.class4.code << endl;
+		cout << "Select class: "; cin >> classSelect;
+		switch (classSelect) {
+		case 1:
+			cout << "Enter new grade for class 1: "; cin >> gradeChange;
+			//add code to find s.class1.code on DB and change it to value given as gradeChange
+			s.class1.studentGrade = gradeChange; //surely cant be this simple -- its not - doesnt change it at all
+			StudentDatabase << s.class1.studentGrade << endl;
+			cout << "Grade successfully updated\n\n";
+			break;
+		case 2:
+			cout << "Enter new grade for class 2: "; cin >> gradeChange;
+			s.class2.studentGrade = gradeChange;
+			StudentDatabase << s.class2.studentGrade << endl;
+			cout << "Grade successfully updated\n\n";
 void studentSearch(vector<Student>& student) {
 	system("cls");
 	long int IDsearch;
@@ -467,6 +807,37 @@ void gradeStudent() {
 	//if IDsearch == ID on database, bring up student name. give option to select which class to add grade to (pull from classes on database that are assigned to the student)
 }
 
+
+			break;
+		case 3:
+			cout << "Enter new grade for class 3: "; cin >> gradeChange;
+			s.class3.studentGrade = gradeChange;
+			StudentDatabase << s.class3.studentGrade << endl;
+			cout << "Grade successfully updated\n\n";
+			break;
+		case 4:
+			cout << "Enter new grade for class 4: "; cin >> gradeChange;
+			s.class4.studentGrade = gradeChange;
+			StudentDatabase << s.class4.studentGrade << endl;
+			cout << "Grade successfully updated\n\n";
+			break;
+		default:
+			cout << "Invalid Input. Enter 1,2,3 or 4 to select a class\n";
+			gradeStudent(student);
+		}
+		StudentDatabase.close();
+		char anotherChar;
+		cout << "Update Another Grade? y/n: "; cin >> anotherChar;
+		if (anotherChar == 'y' || anotherChar == 'Y') {
+			gradeStudent(student);
+		}
+		else {
+			cout << "\n\nDirecting to Admin Menu...";
+			Sleep(1000);
+			adminDatabase(student);
+		}
+		
+	}
 
 void studentDatabase() {
 	system("cls");
