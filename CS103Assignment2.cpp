@@ -208,9 +208,61 @@ vector <Student> Registration(vector<Student>& student) {
 	system("cls");
 	ShowHeader();
 	Student s;
+	int IDflag = 0, PWflaglength = 0, PWflaglow = 0, PWflagHigh = 0, PWflagNum = 0, PWflagSpec = 0, passwordIndex;
 	cout << "***Student Registration***\n\n";
-	cout << "Please Enter your Student ID (6 digit Number): "; cin >> s.ID;
-	cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
+	while (IDflag == 0) {
+		cout << "Please Enter your Student ID (6 digit Number): "; cin >> s.ID;
+		if (sizeof(s.ID) == 4) {
+			IDflag = 1;
+			break;
+		}
+		else {
+			cout << "ID must be 6 digits long\n\n\n";
+		}
+	}
+	while (PWflaglength == 0 && PWflaglow == 0 && PWflagHigh == 0 && PWflagNum == 0 && PWflagSpec == 0) {
+		cout << "Create your password. Password must container uppercase,lowercase & number: "; cin >> s.Password;
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (isdigit(s.Password[passwordIndex])) {
+				PWflagNum = 1;
+			}
+			else {
+				cout << "Password must contain atleast 1 number letter\n";
+			}
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (islower(s.Password[passwordIndex])) {
+				PWflaglow = 1;
+			}
+			else {
+				cout << "Password must contain atleast 1 lowercase letter\n";
+			}
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (isupper(s.Password[passwordIndex])) {
+				PWflagHigh = 1;
+			}
+			else {
+				cout << "Password must contain atleast 1 uppercase letter\n";
+			}
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (isupper(s.Password[passwordIndex])) {
+				PWflagHigh = 1;
+			}
+			else {
+				cout << "Password must contain atleast 1 uppercase letter\n";
+			}
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (s.Password.size() > 7){
+				PWflaglength = 1;
+			}
+			else {
+				cout << "ID must be 6 digits long\nTry again";
+			}
+		}
+	}
 	cout << "Enter your first name: "; cin >> s.fName;
 	cout << "Enter your last name: "; cin >> s.lName;
 	cout << "Enter you email address: "; cin >> s.email;
@@ -220,18 +272,20 @@ vector <Student> Registration(vector<Student>& student) {
 	cout << "Enter last name: "; cin >> s.parent.lName;
 	cout << "Enter contact number: "; cin >> s.parent.contactNumber;
 	student.push_back(s);
-	fstream StudentDatabase("stDB.csv", ios::app);
-	for (int i = 0; i < student.size(); i++) {
+	if (IDflag == 1, PWflaglength == 1, PWflaglow == 1, PWflagHigh == 1, PWflagNum == 1, PWflagSpec == 1) {
+		fstream StudentDatabase("stDB.csv", ios::app);
+		for (int i = 0; i < student.size(); i++) {
 
-		StudentDatabase << s.ID << "," << s.Password << "," << s.fName <<"," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName << "," << s.parent.contactNumber << "," << s.class1.code << "," << s.class1.studentGrade << "," << s.class1.courseCost << "," << s.class2.code << "," << s.class2.studentGrade << "," << s.class2.courseCost << "," << s.class3.code << "," << s.class3.studentGrade << "," << s.class3.courseCost << "," << s.class4.code << "," << s.class4.studentGrade << "," << s.class4.courseCost << "," << endl;
+			StudentDatabase << s.ID << "," << s.Password << "," << s.fName << "," << s.lName << "," << s.email << "," << s.parent.fName << "," << s.parent.lName << "," << s.parent.contactNumber << "," << s.class1.code << "," << s.class1.studentGrade << "," << s.class1.courseCost << "," << s.class2.code << "," << s.class2.studentGrade << "," << s.class2.courseCost << "," << s.class3.code << "," << s.class3.studentGrade << "," << s.class3.courseCost << "," << s.class4.code << "," << s.class4.studentGrade << "," << s.class4.courseCost << "," << endl;
 
+		}
+		StudentDatabase.close();
+		cout << "\n\nRegistration Successfull\nDirecting to main menu...";
+		Sleep(1000);
+		system("cls");
+		main();
+		return(student);
 	}
-	StudentDatabase.close();
-	cout << "\n\nRegistration Successfull\nDirecting to main menu...";
-	Sleep(1000);
-	system("cls");
-	main();
-	return(student);
 
 }
 vector <Student> StudentLogin() {
@@ -346,7 +400,7 @@ void adminDatabase(vector<Student>& student) {
 	};
 }
 
- void studentSearch(vector<Student>& student) { // doesnt bring up the student with matching ID always gives 456789ID
+ void studentSearch(vector<Student>& student) { //always finds and prints the latest ID in the list -- not the line that matches the ID entered by Admin
 		system("cls");
 		long int IDsearch;
 		cout << "Search for student by ID: "; cin >> IDsearch;
@@ -355,7 +409,7 @@ void adminDatabase(vector<Student>& student) {
 		int flag = 0;
 		string line;
 		string property;
-		fstream StudentDatabase("stDB.csv", ios::in);
+		ifstream StudentDatabase("stDB.csv", ios::in);
 		vector<Student> tempStudent;
 		while (getline(StudentDatabase, line)) {
 			istringstream linestream(line);
@@ -414,10 +468,12 @@ void adminDatabase(vector<Student>& student) {
 			dCC >> s.class4.courseCost;
 			sc >> s.parent.contactNumber;
 			tempStudent.push_back(s);
-			if (s.ID == IDsearch) {
-				flag = 1;
-			}
 		}
+		for (int i = 0; i < student.size(); i++) {
+				if (student[i].ID == IDsearch) {
+					flag = 1;
+				}
+			}
 		switch (flag) {
 		case 0:
 			cout << "No student with ID: " << IDsearch << " was found\n";
@@ -432,7 +488,7 @@ void adminDatabase(vector<Student>& student) {
 			}
 			break;
 		case 1:
-			cout << "\nStudent " << IDsearch << " found\nFinding student data...\n\n\n";
+			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
 			Sleep(1000);
 
 			cout << "Personal Contact Details\n\n";
