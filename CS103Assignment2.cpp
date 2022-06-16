@@ -411,6 +411,7 @@ void adminDatabase(vector<Student>& student) {
 		string property;
 		ifstream StudentDatabase("stDB.csv", ios::in);
 		vector<Student> tempStudent;
+		Student foundStudent;
 		while (getline(StudentDatabase, line)) {
 			istringstream linestream(line);
 			getline(linestream, property, ',');
@@ -472,6 +473,8 @@ void adminDatabase(vector<Student>& student) {
 		for (int i = 0; i < student.size(); i++) {
 				if (student[i].ID == IDsearch) {
 					flag = 1;
+					foundStudent = s;
+					break;
 				}
 			}
 		switch (flag) {
@@ -488,26 +491,26 @@ void adminDatabase(vector<Student>& student) {
 			}
 			break;
 		case 1:
-			cout << "\nStudent " << s.ID << " found\nFinding student data...\n\n\n";
+			cout << "\nStudent " << foundStudent.ID << " found\nFinding student data...\n\n\n";
 			Sleep(1000);
 
 			cout << "Personal Contact Details\n\n";
-			cout << "Student ID: " << s.ID<< endl;
-			cout << "Student Password: " << s.Password << endl;
-			cout << "First Name: " << s.fName << endl;
-			cout << "Last Name: " << s.lName << endl;
-			cout << "Email Address: " << s.email << endl << endl;
+			cout << "Student ID: " << foundStudent.ID<< endl;
+			cout << "Student Password: " << foundStudent.Password << endl;
+			cout << "First Name: " << foundStudent.fName << endl;
+			cout << "Last Name: " << foundStudent.lName << endl;
+			cout << "Email Address: " << foundStudent.email << endl << endl;
 
 			cout << "Emergency Contact Details\n\n";
-			cout << "First Name: " << s.parent.fName << endl;
-			cout << "Last Name: " << s.parent.lName << endl;
-			cout << "Contact Number: " << s.parent.contactNumber << endl << endl;
+			cout << "First Name: " << foundStudent.parent.fName << endl;
+			cout << "Last Name: " << foundStudent.parent.lName << endl;
+			cout << "Contact Number: " << foundStudent.parent.contactNumber << endl << endl;
 
 			cout << "Student Grades\n\n";
-			cout << "Class 1: " << s.class1.code << "\tGrade: " << s.class1.studentGrade << "%" << endl;
-			cout << "Class 2: " << s.class2.code << "\tGrade: " << s.class2.studentGrade << "%" << endl;
-			cout << "Class 3: " << s.class3.code << "\tGrade: " << s.class3.studentGrade << "%" << endl;
-			cout << "Class 4: " << s.class4.code << "\tGrade: " << s.class4.studentGrade << "%" << endl << endl;
+			cout << "Class 1: " << foundStudent.class1.code << "\tGrade: " << foundStudent.class1.studentGrade << "%" << endl;
+			cout << "Class 2: " << foundStudent.class2.code << "\tGrade: " << foundStudent.class2.studentGrade << "%" << endl;
+			cout << "Class 3: " << foundStudent.class3.code << "\tGrade: " << foundStudent.class3.studentGrade << "%" << endl;
+			cout << "Class 4: " << foundStudent.class4.code << "\tGrade: " << foundStudent.class4.studentGrade << "%" << endl << endl;
 			
 			cout << "Search again? Y/N: "; cin >> searchChoice;
 			if (searchChoice == 'y' || searchChoice == 'Y') {
