@@ -471,48 +471,33 @@ void adminDatabase(vector<Student>& student) {
 			tempStudent.push_back(s);
 		}
 		for (int i = 0; i < student.size(); i++) {
-				if (student[i].ID == IDsearch) {
-					flag = 1;
-					foundStudent = s;
-					break;
-				}
-			}
-		switch (flag) {
-		case 0:
-			cout << "No student with ID: " << IDsearch << " was found\n";
-			cout << "Search again? Y/N: "; cin >> searchChoice;
-			if (searchChoice == 'y' || searchChoice == 'Y') {
-				studentSearch(student);
-			}
-			else {
-				cout << "\n Returning to Admin main menu...";
+			if (student[i].ID == IDsearch) {
+				foundStudent = s;
+				cout << "\nStudent " << foundStudent.ID << " found\nFinding student data...\n\n\n";
 				Sleep(1000);
-				adminDatabase(student);
+
+				cout << "Personal Contact Details\n\n";
+				cout << "Student ID: " << foundStudent.ID << endl;
+				cout << "Student Password: " << foundStudent.Password << endl;
+				cout << "First Name: " << foundStudent.fName << endl;
+				cout << "Last Name: " << foundStudent.lName << endl;
+				cout << "Email Address: " << foundStudent.email << endl << endl;
+
+				cout << "Emergency Contact Details\n\n";
+				cout << "First Name: " << foundStudent.parent.fName << endl;
+				cout << "Last Name: " << foundStudent.parent.lName << endl;
+				cout << "Contact Number: " << foundStudent.parent.contactNumber << endl << endl;
+
+				cout << "Student Grades\n\n";
+				cout << "Class 1: " << foundStudent.class1.code << "\tGrade: " << foundStudent.class1.studentGrade << "%" << endl;
+				cout << "Class 2: " << foundStudent.class2.code << "\tGrade: " << foundStudent.class2.studentGrade << "%" << endl;
+				cout << "Class 3: " << foundStudent.class3.code << "\tGrade: " << foundStudent.class3.studentGrade << "%" << endl;
+				cout << "Class 4: " << foundStudent.class4.code << "\tGrade: " << foundStudent.class4.studentGrade << "%" << endl << endl;
 			}
-			break;
-		case 1:
-			cout << "\nStudent " << foundStudent.ID << " found\nFinding student data...\n\n\n";
-			Sleep(1000);
-
-			cout << "Personal Contact Details\n\n";
-			cout << "Student ID: " << foundStudent.ID<< endl;
-			cout << "Student Password: " << foundStudent.Password << endl;
-			cout << "First Name: " << foundStudent.fName << endl;
-			cout << "Last Name: " << foundStudent.lName << endl;
-			cout << "Email Address: " << foundStudent.email << endl << endl;
-
-			cout << "Emergency Contact Details\n\n";
-			cout << "First Name: " << foundStudent.parent.fName << endl;
-			cout << "Last Name: " << foundStudent.parent.lName << endl;
-			cout << "Contact Number: " << foundStudent.parent.contactNumber << endl << endl;
-
-			cout << "Student Grades\n\n";
-			cout << "Class 1: " << foundStudent.class1.code << "\tGrade: " << foundStudent.class1.studentGrade << "%" << endl;
-			cout << "Class 2: " << foundStudent.class2.code << "\tGrade: " << foundStudent.class2.studentGrade << "%" << endl;
-			cout << "Class 3: " << foundStudent.class3.code << "\tGrade: " << foundStudent.class3.studentGrade << "%" << endl;
-			cout << "Class 4: " << foundStudent.class4.code << "\tGrade: " << foundStudent.class4.studentGrade << "%" << endl << endl;
-			
-			cout << "Search again? Y/N: "; cin >> searchChoice;
+			else{
+				cout << "No student with ID: " << IDsearch << " was found\n";
+				cout << "Search again? Y/N: "; cin >> searchChoice;
+			}
 			if (searchChoice == 'y' || searchChoice == 'Y') {
 				studentSearch(student);
 			}
