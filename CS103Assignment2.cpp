@@ -208,21 +208,25 @@ vector <Student> Registration(vector<Student>& student) {
 	system("cls");
 	ShowHeader();
 	Student s;
-	int IDLengthFlag = 0, IDNumFlag = 0, PWflaglength = 0, PWflaglow = 0, PWflagHigh = 0, PWflagNum = 0, passwordIndex, idIndex;
+	
 	cout << "***Student Registration***\n\n";
-	cout << "Please Enter your Student ID (6 digit Number): "; getline(cin, s.Password);
-	for (idIndex = 0; idIndex < s.ID.size(); idIndex++) {
-		if (isdigit(s.ID[idIndex])) {
-			IDNumFlag = 1;
-			
+	cout << "Please Enter your Student ID (6 digit Number): "; 
+	cin >> s.ID;
+	if (s.ID.size() == 6) {
+		int IDNumFlag = 0, idIndex; 
+		for (idIndex = 0; idIndex < s.ID.size(); idIndex++) {
+			if (isdigit(s.ID[idIndex])) {
+				IDNumFlag = 1;
+
+			}
+		}
+		if (IDNumFlag == 0) {
+			cout << "ID must only contain digits\n\n\n"; //runs this code block straight away and regardless of user input
+			Sleep(1500);
+			Registration(student);
 		}
 	}
-	if (IDNumFlag == 0) {
-		cout << "ID must only contain digits\n\n\n"; //seems to take the else decision before user enters input
-		Sleep(1500);
-		Registration(student);	
-	}
-	for (idIndex = 0; idIndex < s.ID.size(); idIndex++) {
+	/*for (idIndex = 0; idIndex < s.ID.size(); idIndex++) {
 		if (s.ID.size() == 6) {
 			IDLengthFlag = 1;
 			break;
@@ -233,59 +237,54 @@ vector <Student> Registration(vector<Student>& student) {
 		Sleep(1500);
 		Registration(student);
 				
-	}
+	}*/
 			
-	cout << "Create your password. Password must container uppercase,lowercase & number: "; getline(cin, s.Password); //writes cout twice??
-	for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
-		if (isdigit(s.Password[passwordIndex])) {
-			PWflagNum = 1;
+	cout << "Create your password. Password must container uppercase,lowercase & number and 8+ character: "; 
+	cin >> s.Password;
+	if (s.Password.size() > 7) {
+		int PWflaglength = 0, PWflaglow = 0, PWflagHigh = 0, PWflagNum = 0, passwordIndex;
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (isdigit(s.Password[passwordIndex])) {
+				PWflagNum = 1;
+			}
 		}
-	}
-	if (PWflagNum == 0) {
-		cout << "Password must contain at least 1 number\n";
-	    Sleep(1500);
-		Registration(student);
-		}
-			
-	
-	for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
-		if (islower(s.Password[passwordIndex])) { // not recognising lower case letter. -- only looking at the first letter
-			PWflaglow = 1;
-		}
-	}
-		if(PWflaglow == 0) {
-			cout << "Password must contain at least 1 lowercase letter\n"; 
+		if (PWflagNum == 0) {
+			cout << "Password must contain at least 1 number\n";
 			Sleep(1500);
 			Registration(student);
 		}
-			
-	
-	for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
-		if (isupper(s.Password[passwordIndex])) {
-			PWflagHigh = 1;
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (islower(s.Password[passwordIndex])) { // not recognising lower case letter. -- only looking at the first letter
+				PWflaglow = 1;
+			}
+		}
+		if (PWflaglow == 0) {
+			cout << "Password must contain at least 1 lowercase letter\n";
+			Sleep(1500);
+			Registration(student);
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (isupper(s.Password[passwordIndex])) {
+				PWflagHigh = 1;
+			}
+		}
+		if (PWflagHigh == 0) {
+			cout << "Password must contain atleast 1 uppercase letter\n";
+			Sleep(1500);
+			Registration(student);
+		}
+		for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
+			if (s.Password.size() > 7) {
+				PWflaglength = 1;
+			}
+		}
+		if (PWflaglength == 0) {
+			cout << "Password must at least 8 digits long\nTry again";
+			Sleep(1500);
+			Registration(student);
+
 		}
 	}
-	if (PWflagHigh == 0) {
-		cout << "Password must contain atleast 1 uppercase letter\n";
-		Sleep(1500);
-		Registration(student);
-		}
-			
-		
-	for (passwordIndex = 0; passwordIndex < s.Password.size(); passwordIndex++) {
-		if (s.Password.size() > 7) {
-			PWflaglength = 1;
-		}
-	}
-	if(PWflaglength == 0) {
-		cout << "Password must at least 8 digits long\nTry again";
-		Sleep(1500);
-		Registration(student);
-		
-	}
-		
-		
-	if (IDLengthFlag == 1 && IDNumFlag == 1 && PWflaglength == 1 && PWflaglow == 1 && PWflagHigh == 1 && PWflagNum == 1) {
 		cout << "Enter your first name: "; cin >> s.fName;
 	    cout << "Enter your last name: "; cin >> s.lName;
 	    cout << "Enter you email address: "; cin >> s.email;
@@ -303,7 +302,7 @@ vector <Student> Registration(vector<Student>& student) {
 		system("cls");
 		main();
 		return(student);
-	}
+	
 
 }
 vector <Student> StudentLogin() {
