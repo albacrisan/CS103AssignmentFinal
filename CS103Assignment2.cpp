@@ -144,7 +144,11 @@ void printDatabase(vector<Student>& tempStudent);
 void editRoll(vector<Student>& tempStudent);
 void gradeStudent(vector<Student>& tempStudent);
 
+//Student functions
 void editStudent(vector<Student>& tempStudent);
+void editoptions(vector<Student>& tempStudent);
+vector <Student> editPersonalContactDetails(vector<Student>& tempStudent);
+vector <Student> editEmergencyContactDetails(vector<Student>& tempStudent);
 void studentClassSum(vector<Student>& tempStudent);
 void StudentGradeSum(vector<Student>& tempStudent);
 void studentTuitionSum(vector<Student>& tempStudent);
@@ -818,7 +822,7 @@ void studentDatabase(vector<Student>& tempStudent) {
 void editStudent(vector<Student>& tempStudent) {
 
 
-	//I explain current info (except password of course)
+	//I explain current info (with password but this field can be removed if needed)
 	system("cls");
 	ShowHeader();
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -861,9 +865,9 @@ void editStudent(vector<Student>& tempStudent) {
 			cout << "Class 3: " << tempStudent[i].class3.code << "\tGrade: " << tempStudent[i].class3.studentGrade << "%" << endl;
 			cout << "Class 4: " << tempStudent[i].class4.code << "\tGrade: " << tempStudent[i].class4.studentGrade << "%" << endl << endl;
 
-			cout << "Would you like to edit your information? Y/N: "; cin >> searchChoice;
+			cout << "Would you like to edit your contact details information? Y/N: "; cin >> searchChoice;
 			if (searchChoice == 'y' || searchChoice == 'Y') {
-				studentSearch(tempStudent);
+				editoptions(tempStudent);
 			}
 			else {
 				cout << "\n Returning to Student database main menu...";
@@ -871,30 +875,96 @@ void editStudent(vector<Student>& tempStudent) {
 				studentDatabase(tempStudent);
 			}
 		}
-		else {
-			cout << "No student with ID: " << IDsearch << " was found\n";
-			cout << "Search again? Y/N: "; cin >> searchChoice;
-		}
-		if (searchChoice == 'y' || searchChoice == 'Y') {
-			studentSearch(tempStudent);
-		}
-		else {
-			cout << "\n Returning to Main menu...";
-			Sleep(1000);
-			main();
-		}
-	}
-	//press 1 to edit PW Personal Contact Details
-	//2 to edit fname
-	//3 to edit lname
-	//4 to edit email
-	//5 parent fname
-	//6 parent lname
-	//7 parent contact no.
-	//8 to exit
 
-	//link to functions
+	}
+
 }
+
+
+
+
+
+
+void editoptions(vector<Student>& tempStudent) {
+
+	system("cls");
+	ShowHeader();
+	int menuChoice;
+	cout << "***Student Database Editing options***\n\n";
+	cout << "Press 1 to edit your Personal Contact Details\n"; //fname lname, email, parent details
+	cout << "Press 2 to edit your Emergency Contact details\n"; //brings to next menu that shows class 1,2,3,4 (name)
+	cout << "Press 3 to log out to the student datatase\n";// returns to student database menu
+	cout << "Press 4 to log out to the main datatase\n";// returns to student database menu
+	cout << "Press 5 to exit\n";// returns to student database menu
+	cout << "Enter your choice"; cin >> menuChoice;
+
+	switch (menuChoice) {
+	case 1: editPersonalContactDetails(tempStudent);
+		break;
+	case 2: editEmergencyContactDetails(tempStudent);
+		break;
+	case 3:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		studentDatabase(tempStudent);
+	case 4:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	case 5:
+		cout << "\n\nClosing App...";
+		Sleep(500);
+		exit(1);
+	default:
+		cout << "\n\nClosing App.. As not 1, 2, 3, 4 or 5 - you have been logged out.";
+		Sleep(500);
+		exit(1);
+	};
+}
+
+
+vector <Student> editPersonalContactDetails(vector<Student>& tempStudent) {
+
+
+
+	system("cls");
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 14);
+	cout << "                         Edit Personal Contact Details Screen \n\n";
+	SetConsoleTextAttribute(color, 7);
+	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
+	cout << "Please re-confirm your password: "; cin >> recPassword;
+
+	return(tempStudent);
+}
+
+vector <Student> editEmergencyContactDetails(vector<Student>& tempStudent) {
+
+	system("cls");
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 14);
+	cout << "                         Edit Emergency Contact Details Screen \n\n";
+	SetConsoleTextAttribute(color, 7);
+	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
+	cout << "Please re-confirm your password: "; cin >> recPassword;
+
+
+	return(tempStudent);
+}
+
+
+
+
+
+
+
+
 void studentClassSum(vector<Student>& tempStudent) {
 	//print all current details
 	system("cls");
@@ -1072,6 +1142,7 @@ void StudentGradeSum(vector<Student>& tempStudent) {
 				SetConsoleTextAttribute(color, 12);
 				cout << "F. It appears that you may have failed some papers. Please contact your lecturers for remedial tutoring." << endl;
 			}
+			break;
 
 
 
@@ -1079,7 +1150,7 @@ void StudentGradeSum(vector<Student>& tempStudent) {
 		}
 		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password != recPassword) {
 			cout << "\n\nNo student with these credentials was found.\n\n";
-
+			break;
 		}
 		else
 		{
@@ -1159,10 +1230,11 @@ void studentTuitionSum(vector<Student>& tempStudent) {
 			SetConsoleTextAttribute(color, 2);
 			cout << "This is your current tuition for the semester. Thank you for your payments to date." << endl;
 			cout << "If any queries please let us know.";
+			break;
 		}
 		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password != recPassword) {
 			cout << "\n\nNo student with these credentials was found.\n\n";
-
+			break;
 		}
 		else
 		{
