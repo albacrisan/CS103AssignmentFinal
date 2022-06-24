@@ -137,6 +137,7 @@ vector <Student> StudentLogin(vector<Student>& tempStudent);
 void adminLogin(vector<Student>& tempStudent);
 void adminDatabase(vector<Student>& tempStudent);
 void studentDatabase(vector<Student>& tempStudent);
+vector <Student> readFromFile();
 
 //admin Database menu option functions
 void studentSearch(vector<Student>& tempStudent);
@@ -164,6 +165,7 @@ int main() {
 
 
 	vector <Student> tempStudent;
+	tempStudent = readFromFile();
 	int menuChoice, loginChoice;
 	//cout << "***University Database***\n\n\n";
 	cout << " Press 1 to Login\n Press 2 to Register\n Press 3 to exit Program\n Enter your choice: "; cin >> menuChoice;
@@ -322,6 +324,7 @@ vector <Student> readFromFile() {
 		s.parent.lName = property;
 		getline(linestream, property, ',');
 		stringstream sc(property);
+		sc >> s.parent.contactNumber;
 
 		getline(linestream, property, ',');
 		s.class1.code = property;
@@ -358,7 +361,6 @@ vector <Student> readFromFile() {
 		getline(linestream, property, ',');
 		stringstream dCC(property);
 		dCC >> s.class4.courseCost;
-		sc >> s.parent.contactNumber;
 		tempStudent.push_back(s);
 	}
 	StudentDatabase.close();
@@ -489,7 +491,7 @@ void studentSearch(vector<Student>& tempStudent) {
 	string line;
 	string property;
 	int i;
-	tempStudent = readFromFile();
+	
 	for (i = 0; i < tempStudent.size(); i++) {
 		if (tempStudent[i].ID == IDsearch) {
 			cout << tempStudent.size() << endl;
@@ -545,7 +547,7 @@ void printDatabase(vector<Student>& tempStudent) {
 	string line;
 	Student s;
 	string property;
-	tempStudent = readFromFile();
+	
 	for (int i = 0; i < tempStudent.size(); i++) {
 		cout << " Student " << tempStudent[i].ID << ":\n\n";
 
@@ -588,7 +590,7 @@ void editRoll(vector<Student>& tempStudent) {
 	Student s;
 	char searchChoice;
 	int flag = 0, i;
-	tempStudent = readFromFile();
+	
 	std::fstream StudentDatabase("stDB.csv", std::ios::out);
 	if (tempStudent.size() == 0) {
 		char returnMain = 'y';
@@ -693,9 +695,9 @@ void gradeStudent(vector<Student>& tempStudent) {
 	Student s;
 	char searchChoice;
 	int i;
-	tempStudent = readFromFile();
+	
 	fstream StudentDatabase("stDB.csv", ios::out);
-	if (tempStudent.size() == 0) {
+	if (tempStudent.size() == 0) { // loops through lines on vector from the csv
 		char returnMain = 'y';
 		cout << " Empty Database\n\n";
 		cout << " Press x to return to Admin menu: ";
@@ -750,8 +752,9 @@ void gradeStudent(vector<Student>& tempStudent) {
 			case 4:
 				cout << " Enter new grade for class 4: "; cin >> gradeChange;
 				tempStudent[i].class4.studentGrade = gradeChange;
-				StudentDatabase << tempStudent[i].ID << "," << tempStudent[i].Password << "," << tempStudent[i].fName << "," << tempStudent[i].lName << "," << tempStudent[i].email << "," << tempStudent[i].parent.fName << "," << tempStudent[i].parent.lName << "," << tempStudent[i].parent.contactNumber << "," << tempStudent[i].class1.code << "," << tempStudent[i].class1.studentGrade << "," << tempStudent[i].class1.courseCost << "," << tempStudent[i].class2.code << "," << tempStudent[i].class2.studentGrade << "," << tempStudent[i].class2.courseCost << "," << tempStudent[i].class3.code << "," << tempStudent[i].class3.studentGrade << "," << tempStudent[i].class3.courseCost << "," << tempStudent[i].class4.code << "," << tempStudent[i].class4.studentGrade << "," << tempStudent[i].class4.courseCost << endl;
-				
+				StudentDatabase << s.ID << "," << tempStudent[i].Password << "," << s.fName << "," << tempStudent[i].lName << "," << tempStudent[i].email << "," << tempStudent[i].parent.fName << "," << tempStudent[i].parent.lName << "," << tempStudent[i].parent.contactNumber << "," << tempStudent[i].class1.code << "," << tempStudent[i].class1.studentGrade << "," << tempStudent[i].class1.courseCost << "," << tempStudent[i].class2.code << "," << tempStudent[i].class2.studentGrade << "," << tempStudent[i].class2.courseCost << "," << tempStudent[i].class3.code << "," << tempStudent[i].class3.studentGrade << "," << tempStudent[i].class3.courseCost << "," << tempStudent[i].class4.code << "," << tempStudent[i].class4.studentGrade << "," << tempStudent[i].class4.courseCost << endl;
+
+
 				cout << " Grade successfully updated\n\n";
 
 				break;
