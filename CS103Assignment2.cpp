@@ -71,9 +71,32 @@ struct Student { // main struct, all others are nested within student, database 
 };
 
 
-// for the course info
 
-struct CourseRecord {
+
+
+
+
+vector <Student> Registration(vector<Student>& student);
+vector <Student> StudentLogin(vector<Student>& tempStudent);
+void adminLogin(vector<Student>& tempStudent);
+void adminDatabase(vector<Student>& tempStudent);
+void studentDatabase(vector<Student>& tempStudent);
+vector <Student> readFromFile();
+
+//admin Database menu option functions
+void studentSearch(vector<Student>& tempStudent);
+void printDatabase(vector<Student>& tempStudent);
+void classGradeAverages(vector<Student>& tempStudent);
+void tuitionTotal(vector<Student>& tempStudent);
+
+//Student functions
+void viewStudentPersonaldetails(vector<Student>& tempStudent);
+void studentDatabaseIN();
+void StudentGradeSum(vector<Student>& tempStudent);
+void studentTuitionSum(vector<Student>& tempStudent);
+void studentAvailableCourses(vector<Student>& tempStudent);
+void studentAvailableCourses(vector<Student>& tempStudent);
+struct CourseRecord { // for the course info
 public:
 	CourseRecord(  //courseID, coursename, semester, YEAR, costlocal, costinternational, teacher per file
 		string id,
@@ -104,7 +127,7 @@ public:
 		cout << "Course ID and name: " << Id << " " << CourseName;
 		SetConsoleTextAttribute(color, 8);
 		cout << " Teacher: " << Teacher << endl;
-		SetConsoleTextAttribute(color, 7);
+		SetConsoleTextAttribute(color, 15);
 		cout << "Year: " << YEAR << " - " << Semester << " ";
 		SetConsoleTextAttribute(color, 13);
 		cout << "---> Course Cost local: NZD$" << CostLocal << " and international cost: NZD$" << CostInternational << endl;
@@ -119,44 +142,17 @@ public:
 	double CostInternational;
 	string Teacher;
 
-};
-
-void displayCourses(vector<CourseRecord>& courses) {
+}; // for the course info
+void displayCourses(vector<CourseRecord>& courses) { // for the course info
 
 	for (auto course : courses) {
 		course.display();
 	}
-}
-// course info ends
-
-
-
-
-vector <Student> Registration(vector<Student>& student);
-vector <Student> StudentLogin(vector<Student>& tempStudent);
-void adminLogin(vector<Student>& tempStudent);
-void adminDatabase(vector<Student>& tempStudent);
-void studentDatabase(vector<Student>& tempStudent);
-vector <Student> readFromFile();
-
-//admin Database menu option functions
-void studentSearch(vector<Student>& tempStudent);
-void printDatabase(vector<Student>& tempStudent);
-void classGradeAverages(vector<Student>& tempStudent);
-void tuitionTotal(vector<Student>& tempStudent);
-
-//Student functions
-void editStudent(vector<Student>& tempStudent);
-void editoptions(vector<Student>& tempStudent);
-vector <Student> editPersonalContactDetails(vector<Student>& tempStudent);
-vector <Student> editEmergencyContactDetails(vector<Student>& tempStudent);
-void studentClassSum(vector<Student>& tempStudent);
-void StudentGradeSum(vector<Student>& tempStudent);
-void studentTuitionSum(vector<Student>& tempStudent);
-void studentAvailableCourses(vector<Student>& tempStudent);
+}  
 
 //Headers and functionality
 void ShowHeader();
+void endMenuchoiseIN(vector<Student>& tempStudent);
 void endMenuchoise(vector<Student>& tempStudent);
 
 int main() {
@@ -699,31 +695,28 @@ void tuitionTotal(vector<Student>& tempStudent) {
 	}
 }
 
+
 void studentDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	int menuChoice;
-	cout << "           ***Student Database Access***\n\n";
-	cout << " Press 1 to view your details\n"; //fname lname, email, parent details
-	cout << " Press 2 to edit your details\n"; //brings to next menu that shows class 1,2,3,4 (name)
-	cout << " Press 3 to grade summary for the year\n"; // brings up grades for class 1,2,3,4
-	cout << " Press 4 to see tuition cost summary\n";// opens cost breakdown for each class
-	cout << " Press 5 to see all courses available next semester\n";// opens a list of all available courses
-	cout << " Press 6 to log out\n";// returns to main menu
-	cout << " Enter your choice"; cin >> menuChoice;
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 14);
+	cout << "                         Student Database Access\n\n";
+	SetConsoleTextAttribute(color, 15);
+	cout << " Press 1 to access available actions for this current Semester\n";
+	cout << " Press 2 to see all courses available next semester\n";// opens a list of all available courses next semester for a student
+	cout << " Press 3 to log out to main\n\n";
+	cout << "\n Enter your choice: "; cin >> menuChoice;
 
 	switch (menuChoice) {
-	case 1: studentClassSum(tempStudent);
+	case 1: studentDatabaseIN();
 		break;
-	case 2: editStudent(tempStudent);
+	case 2: studentAvailableCourses(tempStudent);
 		break;
-	case 3: StudentGradeSum(tempStudent);
-		break;
-	case 4: studentTuitionSum(tempStudent);
-		break;
-	case 5: studentAvailableCourses(tempStudent);
-		break;
-	case 6:
+	case 3:
 		cout << "\n\nLogging out\nReturning to main menu...";
 		Sleep(1000);
 		main();
@@ -731,370 +724,175 @@ void studentDatabase(vector<Student>& tempStudent) {
 
 }
 
-void editStudent(vector<Student>& tempStudent) {
 
+void studentDatabaseIN() {
+	system("cls");
+	ShowHeader();
 
-	//I explain current info (with password but this field can be removed if needed)
+	//Reload data
+	vector <Student> tempStudent;
+	tempStudent = readFromFile();
 	system("cls");
 	ShowHeader();
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	string IDsearch;
-	SetConsoleTextAttribute(color, 12);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	SetConsoleTextAttribute(color, 7);
-	Student s;
-	char searchChoice = 'n';
-	int flag = 0;
-	string line;
-	string property;
-	tempStudent = readFromFile();
-	int i;
-	for (i = 0; i < tempStudent.size(); i++) {
-		if (tempStudent[i].ID == IDsearch) {
-			cout << "\nStudent " << IDsearch << "Success! ID found.\nThis is your current information.\n\n\n";
-			Sleep(1000);
-			SetConsoleTextAttribute(color, 10);
-			cout << "Personal Contact Details\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Student ID: " << tempStudent[i].ID << endl;
-			cout << "Student Password: " << tempStudent[i].Password << endl;
-			cout << "First Name: " << tempStudent[i].fName << endl;
-			cout << "Last Name: " << tempStudent[i].lName << endl;
-			cout << "Email Address: " << tempStudent[i].email << endl << endl;
-
-			SetConsoleTextAttribute(color, 10);
-			cout << "Emergency Contact Details\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "First Name: " << tempStudent[i].parent.fName << endl;
-			cout << "Last Name: " << tempStudent[i].parent.lName << endl;
-			cout << "Contact Number: " << tempStudent[i].parent.contactNumber << endl << endl;
-
-			SetConsoleTextAttribute(color, 10);
-			cout << "Student Grades and courses\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Class 1: " << tempStudent[i].class1.code << "\tGrade: " << tempStudent[i].class1.studentGrade << "%" << endl;
-			cout << "Class 2: " << tempStudent[i].class2.code << "\tGrade: " << tempStudent[i].class2.studentGrade << "%" << endl;
-			cout << "Class 3: " << tempStudent[i].class3.code << "\tGrade: " << tempStudent[i].class3.studentGrade << "%" << endl;
-			cout << "Class 4: " << tempStudent[i].class4.code << "\tGrade: " << tempStudent[i].class4.studentGrade << "%" << endl << endl;
-
-			cout << "Would you like to edit your contact details information? Y/N: "; cin >> searchChoice;
-			if (searchChoice == 'y' || searchChoice == 'Y') {
-				editoptions(tempStudent);
-			}
-			else {
-				cout << "\n Returning to Student database main menu...";
-				Sleep(1000);
-				studentDatabase(tempStudent);
-			}
-		}
-
-	}
-
-}
-
-
-
-
-
-
-void editoptions(vector<Student>& tempStudent) {
-
-	system("cls");
-	ShowHeader();
 	int menuChoice;
-	cout << "***Student Database Editing options***\n\n";
-	cout << "Press 1 to edit your Personal Contact Details\n"; //fname lname, email, parent details
-	cout << "Press 2 to edit your Emergency Contact details\n"; //brings to next menu that shows class 1,2,3,4 (name)
-	cout << "Press 3 to log out to the student datatase\n";// returns to student database menu
-	cout << "Press 4 to log out to the main datatase\n";// returns to student database menu
-	cout << "Press 5 to exit\n";// returns to student database menu
-	cout << "Enter your choice"; cin >> menuChoice;
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 14);
+	cout << "                   Student Database Access - Current Semester\n\n";
+	SetConsoleTextAttribute(color, 15);
+	cout << " Press 1 to view your Personal and Emergency Contact details\n";
+	cout << " Press 2 to see your grade summary for the year\n";
+	cout << " Press 3 to see tuition cost summary\n";
+	cout << " Press 4 to log out to main\n\n";
+	cout << " Enter your choice: "; cin >> menuChoice;
 
 	switch (menuChoice) {
-	case 1: editPersonalContactDetails(tempStudent);
+	case 1: viewStudentPersonaldetails(tempStudent);
 		break;
-	case 2: editEmergencyContactDetails(tempStudent);
+	case 2: StudentGradeSum(tempStudent);
 		break;
-	case 3:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		studentDatabase(tempStudent);
+	case 3: studentTuitionSum(tempStudent);
+		break;
 	case 4:
 		cout << "\n\nLogging out\nReturning to main menu...";
 		Sleep(1000);
 		main();
-	case 5:
-		cout << "\n\nClosing App...";
-		Sleep(500);
-		exit(1);
-	default:
-		cout << "\n\nClosing App.. As not 1, 2, 3, 4 or 5 - you have been logged out.";
-		Sleep(500);
-		exit(1);
 	};
+
 }
 
-
-vector <Student> editPersonalContactDetails(vector<Student>& tempStudent) {
-
-
+void viewStudentPersonaldetails(vector<Student>& tempStudent) {
 
 	system("cls");
 	ShowHeader();
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(color, 14);
+	cout << "                         Student Personal details screen \n\n";
 	string IDsearch;
 	string recPassword;
-	SetConsoleTextAttribute(color, 14);
-	cout << "                         Edit Personal Contact Details Screen \n\n";
-	SetConsoleTextAttribute(color, 7);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	cout << "Please re-confirm your password: "; cin >> recPassword;
-
-	return(tempStudent);
-}
-
-vector <Student> editEmergencyContactDetails(vector<Student>& tempStudent) {
-
-	system("cls");
-	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	string IDsearch;
-	string recPassword;
-	SetConsoleTextAttribute(color, 14);
-	cout << "                         Edit Emergency Contact Details Screen \n\n";
-	SetConsoleTextAttribute(color, 7);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	cout << "Please re-confirm your password: "; cin >> recPassword;
-
-
-	return(tempStudent);
-}
-
-
-
-
-
-
-
-
-void studentClassSum(vector<Student>& tempStudent) {
-	//print all current details
-	system("cls");
-	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	string IDsearch;
-	string recPassword;
-	SetConsoleTextAttribute(color, 14);
-	cout << "                         Student Details enquiry screen \n\n";
-	SetConsoleTextAttribute(color, 7);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	cout << "Please re-confirm your password: "; cin >> recPassword;
-	SetConsoleTextAttribute(color, 7);
+	SetConsoleTextAttribute(color, 15);
+	cout << " Search for student by ID: "; cin >> IDsearch;
+	cout << " Search for student by password: "; cin >> recPassword;
 	Student s;
 	char searchChoice = 'n';
 	int flag = 0;
 	string line;
 	string property;
-	tempStudent = readFromFile();
-
 	int i;
+
 	for (i = 0; i < tempStudent.size(); i++) {
-		if (tempStudent[i].ID != IDsearch) {
-			cout << "\n\nNo student was found. Please verify your student ID.\n\n";    //check ID exists
-			break;
-
-		}
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
+		if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
+			system("cls");
+			ShowHeader();
+			HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(color, 14);
+			cout << "                         Viewing personal details \n\n";
+			
 			SetConsoleTextAttribute(color, 10);
-			cout << "\nWelcome " << tempStudent[i].fName << " " << tempStudent[i].lName << endl;
-			SetConsoleTextAttribute(color, 7);
-			cout << "Thank you! Your ID " << tempStudent[i].ID << " and its associated password are now confirmed.\n";
-
-			SetConsoleTextAttribute(color, 10);
-			cout << "\nPersonal Contact Details on file\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Student ID: " << tempStudent[i].ID << endl;
-			cout << "Student Password: " << tempStudent[i].Password << endl;
-			cout << "First Name: " << tempStudent[i].fName << endl;
-			cout << "Last Name: " << tempStudent[i].lName << endl;
-			cout << "Email Address: " << tempStudent[i].email << endl << endl;
+			cout << " - Personal Contact Details - \n\n";
+			SetConsoleTextAttribute(color, 15);
+			cout << " First Name:       " << tempStudent[i].fName << endl;
+			cout << " Last Name:        " << tempStudent[i].lName << endl;
+			cout << " Email Address:    " << tempStudent[i].email << endl << endl;
 
 			SetConsoleTextAttribute(color, 10);
-			cout << "Emergency Contact Details\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "First Name: " << tempStudent[i].parent.fName << endl;
-			cout << "Last Name: " << tempStudent[i].parent.lName << endl;
-			cout << "Contact Number: " << tempStudent[i].parent.contactNumber << endl << endl;
+			cout << " - Emergency Contact Details -\n\n";
+			SetConsoleTextAttribute(color, 15);
+			cout << " First Name:       " << tempStudent[i].parent.fName << endl;
+			cout << " Last Name:        " << tempStudent[i].parent.lName << endl;
+			cout << " Contact Number:   " << tempStudent[i].parent.contactNumber << endl << endl;
 
-			SetConsoleTextAttribute(color, 10);
-			cout << "Student Grades and courses\n\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Class 1: " << tempStudent[i].class1.code << "\tGrade: " << tempStudent[i].class1.studentGrade << "%" << "\tCost: $NZD" << tempStudent[i].class1.courseCost << endl;
-			cout << "Class 2: " << tempStudent[i].class2.code << "\tGrade: " << tempStudent[i].class2.studentGrade << "%" << "\tCost: $NZD" << tempStudent[i].class2.courseCost << endl;
-			cout << "Class 3: " << tempStudent[i].class3.code << "\tGrade: " << tempStudent[i].class3.studentGrade << "%" << "\tCost: $NZD" << tempStudent[i].class3.courseCost << endl;
-			cout << "Class 4: " << tempStudent[i].class4.code << "\tGrade: " << tempStudent[i].class4.studentGrade << "%" << "\tCost: $NZD" << tempStudent[i].class4.courseCost << endl << endl;
-			float totalPoints;
-			totalPoints = (tempStudent[i].class1.studentGrade + tempStudent[i].class2.studentGrade + tempStudent[i].class3.studentGrade + tempStudent[i].class4.studentGrade) / 4;
-			SetConsoleTextAttribute(color, 2);
-			cout << "Grade average =                        " << totalPoints << "%" << endl;
-			cout << "Total Semester Cost =                 $NZD " << tempStudent[i].class1.courseCost + tempStudent[i].class2.courseCost + tempStudent[i].class3.courseCost + tempStudent[i].class4.courseCost << endl;
 			break;
 		}
-
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password != recPassword) {
-			cout << "\n\nNo student with these credentials was found. If this continues, please verify your password with the administrator. \n\n";
-			break;
-
-		}
-		else
-		{
-			break;
-		}
+		else { SetConsoleTextAttribute(color, 12); "No record found"; }
 	}
-
-	SetConsoleTextAttribute(color, 7);
-	cout << "\n\nPress 1 to return to the student database\n"; // returns to student database
-	cout << "Press 2 to return to the main menu\n"; // returns to main menu
-	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
-	int menuChoiceStudent;
-	cout << "Enter your choice"; cin >> menuChoiceStudent;
-
-	switch (menuChoiceStudent) {
-	case 1:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		studentDatabase(tempStudent);
-	case 2:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		main();
-	case 3:
-		cout << "\n\nClosing App...";
-		Sleep(500);
-		exit(1);
-	default:
-		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
-		Sleep(500);
-		exit(1);
-	};
+	
+	endMenuchoiseIN(tempStudent);
 }
+
+
+
 void StudentGradeSum(vector<Student>& tempStudent) {
 	//This function prints course grades.
 	//Note, 90–100 A; 80–89 B; 70–79 C; 60–69 D; 50–59 E; 0–49 F
 	system("cls");
 	ShowHeader();
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	string IDsearch;
-	string recPassword;
 	SetConsoleTextAttribute(color, 14);
 	cout << "                         Student Course Marks enquiry screen \n\n";
-	SetConsoleTextAttribute(color, 7);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	cout << "Please re-confirm your password: "; cin >> recPassword;
-	SetConsoleTextAttribute(color, 7);
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 15);
+	cout << " Search for student by ID: "; cin >> IDsearch;
+	cout << " Search for student by password: "; cin >> recPassword;
 	Student s;
 	char searchChoice = 'n';
 	int flag = 0;
 	string line;
 	string property;
-	tempStudent = readFromFile();
-
-
 	int i;
+
 	for (i = 0; i < tempStudent.size(); i++) {
-
-		if (tempStudent[i].ID != IDsearch) {
-			cout << "\n\nNo student was found. Please verify your student ID.\n\n";    //check ID exists
-			break;
-
-		}
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
-			SetConsoleTextAttribute(color, 10);
-			cout << "\nWelcome " << tempStudent[i].fName << " " << tempStudent[i].lName << endl;
-			SetConsoleTextAttribute(color, 7);
-			cout << "Thank you! Your ID " << tempStudent[i].ID << " and its associated password are now confirmed.\n";
+		if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
+			system("cls");
+			ShowHeader();
+			HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(color, 14);
+			cout << "                         Viewing Course Mark details \n\n";
 
 			SetConsoleTextAttribute(color, 10);
-			cout << "\nYour Current Semester's Student Fees\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Accounting Class 1: " << tempStudent[i].class1.code << "\t" << tempStudent[i].class1.studentGrade << "%" << endl;
-			cout << "Accounting Class 2: " << tempStudent[i].class2.code << "\t" << tempStudent[i].class2.studentGrade << "%" << endl;
-			cout << "Accounting Class 3: " << tempStudent[i].class3.code << "\t" << tempStudent[i].class3.studentGrade << "%" << endl;
-			cout << "Accounting Class 4: " << tempStudent[i].class4.code << "\t" << tempStudent[i].class4.studentGrade << "%" << endl;
+			cout << "\n - Your Current Semester's Marks - \n\n";
+			SetConsoleTextAttribute(color, 15);
+			cout << " Accounting Class 1: " << tempStudent[i].class1.code << " Accounting for Strategy and Value      \tMark: " << tempStudent[i].class1.studentGrade << "%" << endl;
+			cout << " Accounting Class 2: " << tempStudent[i].class2.code << " Fraud Auditing                         \tMark: " << tempStudent[i].class2.studentGrade << "%" << endl;
+			cout << " Accounting Class 3: " << tempStudent[i].class3.code << " Data Analytics for Financial Statements\tMark: " << tempStudent[i].class3.studentGrade << "%" << endl;
+			cout << " Accounting Class 4: " << tempStudent[i].class4.code << " Accounting Information Systems         \tMark: " << tempStudent[i].class4.studentGrade << "%" << endl;
 
-			float totalPoints;
-			totalPoints = (tempStudent[i].class1.studentGrade + tempStudent[i].class2.studentGrade + tempStudent[i].class3.studentGrade + tempStudent[i].class4.studentGrade) / 4;
-			SetConsoleTextAttribute(color, 2);
-			cout << "Grade average = " << totalPoints << "%" << endl;
-			int MarkAve = totalPoints;
-			//cout << "Your Overall Grade for the semester is: " << MarkAve << endl;
-			cout << "This is an overall grade of ";
+			SetConsoleTextAttribute(color, 10);
+			cout << "\n - Overall mark - \n\n";
+			SetConsoleTextAttribute(color, 15);
+			double average;
+			average = (tempStudent[i].class1.studentGrade + tempStudent[i].class2.studentGrade + tempStudent[i].class3.studentGrade + tempStudent[i].class4.studentGrade) / 4;
+			cout << " In total your average was ";
+			SetConsoleTextAttribute(color, 14); 
+			cout << average << "%" << endl;
+			SetConsoleTextAttribute(color, 15);
+			int MarkAve = average;
+			cout << " This is an overall grade of ";
 
 			if (MarkAve >= 90) { // 90 and above
 				SetConsoleTextAttribute(color, 10);
 				cout << "A. Excellent. You have obtained top marks this Semester. Truly well done!" << endl;
 			}
-			else if (80 <= MarkAve < 90) { //80-89
+			else if (MarkAve >= 80 && MarkAve < 90) { //80-89
 				SetConsoleTextAttribute(color, 10);
 				cout << "B. Very well done." << endl;
 			}
-			else if (70 <= MarkAve < 80) { //70-79
+			else if (MarkAve >= 70 && MarkAve < 80) { //70-79
 				SetConsoleTextAttribute(color, 7);
 				cout << "C. You have passed this semester." << endl;
 			}
-			else if (60 <= MarkAve < 70) { //60-69
+			else if (MarkAve >= 60 && MarkAve < 70) { //60-69
 				SetConsoleTextAttribute(color, 7);
 				cout << "D. Overall pass but you may wish to go over some of the concepts again." << endl;
 			}
-			else if (50 <= MarkAve < 60) { //50-59
+			else if (MarkAve >= 50 && MarkAve < 60) { //50-59
 				SetConsoleTextAttribute(color, 10);
 				cout << "E. Overall pass but you may wish to ask for extra tutoring." << endl;
 			}
 			else { //0-49
 				SetConsoleTextAttribute(color, 12);
-				cout << "F. It appears that you may have failed some papers. Please contact your lecturers for remedial tutoring." << endl;
+				cout << "F. It appears that you may have failed some papers. \n Please contact your lecturers for remedial tutoring." << endl;
 			}
-			break;
 
-
-
-
-		}
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password != recPassword) {
-			cout << "\n\nNo student with these credentials was found.\n\n";
+			cout << " If you have any queries please let us know.\n\n";
 			break;
 		}
-		else
-		{
-			break;
-		}
+		else { SetConsoleTextAttribute(color, 12); "No record found\n\n"; }
 	}
 
-	SetConsoleTextAttribute(color, 7);
-	cout << "\n\nPress 1 to return to the student database\n"; // returns to student database
-	cout << "Press 2 to return to the main menu\n"; // returns to main menu
-	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
-	int menuChoiceStudent;
-	cout << "Enter your choice"; cin >> menuChoiceStudent;
-
-	switch (menuChoiceStudent) {
-	case 1:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		studentDatabase(tempStudent);
-	case 2:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		main();
-	case 3:
-		cout << "\n\nClosing App...";
-		Sleep(500);
-		exit(1);
-	default:
-		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
-		Sleep(500);
-		exit(1);
-	};
+	endMenuchoiseIN(tempStudent);
 
 }
 void studentTuitionSum(vector<Student>& tempStudent) {
@@ -1103,84 +901,51 @@ void studentTuitionSum(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	string IDsearch;
-	string recPassword;
 	SetConsoleTextAttribute(color, 14);
 	cout << "                         Student course cost enquiry screen \n\n";
-	SetConsoleTextAttribute(color, 7);
-	cout << "Please re-confirm your student ID: "; cin >> IDsearch;
-	cout << "Please re-confirm your password: "; cin >> recPassword;
-	SetConsoleTextAttribute(color, 7);
+	string IDsearch;
+	string recPassword;
+	SetConsoleTextAttribute(color, 15);
+	cout << " Search for student by ID: "; cin >> IDsearch;
+	cout << " Search for student by password: "; cin >> recPassword;
 	Student s;
 	char searchChoice = 'n';
 	int flag = 0;
 	string line;
 	string property;
-	tempStudent = readFromFile();
-
 	int i;
+
 	for (i = 0; i < tempStudent.size(); i++) {
-		if (tempStudent[i].ID != IDsearch) {
-			cout << "\n\nNo student was found. Please verify your student ID.\n\n";    //check ID exists
-			break;
-
-		}
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
-			SetConsoleTextAttribute(color, 10);
-			cout << "\nWelcome " << tempStudent[i].fName << " " << tempStudent[i].lName << endl;
-			SetConsoleTextAttribute(color, 7);
-			cout << "Thank you! Your ID " << tempStudent[i].ID << " and its associated password are now confirmed.\n";
+		if (tempStudent[i].ID == IDsearch && tempStudent[i].Password == recPassword) {
+			system("cls");
+			ShowHeader();
+			HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(color, 14);
+			cout << "                         Viewing Course Cost details \n\n";
 
 			SetConsoleTextAttribute(color, 10);
-			cout << "\nYour Current Semester's Student Fees\n";
-			SetConsoleTextAttribute(color, 7);
-			cout << "Accounting Class 1: " << tempStudent[i].class1.code << "\tCost: $NZD " << tempStudent[i].class1.courseCost << endl;
-			cout << "Accounting Class 2: " << tempStudent[i].class2.code << "\tCost: $NZD " << tempStudent[i].class2.courseCost << endl;
-			cout << "Accounting Class 3: " << tempStudent[i].class3.code << "\tCost: $NZD " << tempStudent[i].class3.courseCost << endl;
-			cout << "Accounting Class 4: " << tempStudent[i].class4.code << "\tCost: $NZD " << tempStudent[i].class4.courseCost << endl;
-			cout << "Total Semester Cost =                 $NZD " << tempStudent[i].class1.courseCost + tempStudent[i].class2.courseCost + tempStudent[i].class3.courseCost + tempStudent[i].class4.courseCost << endl;
-			SetConsoleTextAttribute(color, 2);
-			cout << "This is your current tuition for the semester. Thank you for your payments to date." << endl;
-			cout << "If any queries please let us know.";
+			cout << "\n - Your Current Semester's Student Fees - \n\n";
+			SetConsoleTextAttribute(color, 15);
+			cout << " Accounting Class 1: " << tempStudent[i].class1.code << " Accounting for Strategy and Value      \tCost: $NZD " << tempStudent[i].class1.courseCost << endl;
+			cout << " Accounting Class 2: " << tempStudent[i].class2.code << " Fraud Auditing                         \tCost: $NZD " << tempStudent[i].class2.courseCost << endl;
+			cout << " Accounting Class 3: " << tempStudent[i].class3.code << " Data Analytics for Financial Statements\tCost: $NZD " << tempStudent[i].class3.courseCost << endl;
+			cout << " Accounting Class 4: " << tempStudent[i].class4.code << " Accounting Information Systems         \tCost: $NZD " << tempStudent[i].class4.courseCost << endl;
+
+			SetConsoleTextAttribute(color, 10);
+			cout << "\n - Totals - \n\n";
+			SetConsoleTextAttribute(color, 15);
+			cout << " In total you have 4 papers.Your total Semester Cost =  ";
+			SetConsoleTextAttribute(color, 14);
+			cout << "$NZD " << tempStudent[i].class1.courseCost + tempStudent[i].class2.courseCost + tempStudent[i].class3.courseCost + tempStudent[i].class4.courseCost << endl;
+			SetConsoleTextAttribute(color, 15);
+			cout << " This is your current tuition for the semester. Thank you for your payments to date." << endl;
+			cout << " If you have any queries please let us know.\n\n";
 			break;
 		}
-		else if (tempStudent[i].ID == IDsearch && tempStudent[i].Password != recPassword) {
-			cout << "\n\nNo student with these credentials was found.\n\n";
-			break;
-		}
-		else
-		{
-			break;
-		}
+		else { SetConsoleTextAttribute(color, 12); "No record found\n\n"; }
 	}
 
-
-	SetConsoleTextAttribute(color, 7);
-	cout << "\n\nPress 1 to return to the student database\n"; // returns to student database
-	cout << "Press 2 to return to the main menu\n"; // returns to main menu
-	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
-	int menuChoiceStudent;
-	cout << "Enter your choice"; cin >> menuChoiceStudent;
-
-	switch (menuChoiceStudent) {
-	case 1:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		studentDatabase(tempStudent);
-	case 2:
-		cout << "\n\nLogging out\nReturning to main menu...";
-		Sleep(1000);
-		main();
-	case 3:
-		cout << "\n\nClosing App...";
-		Sleep(500);
-		exit(1);
-	default:
-		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
-		Sleep(500);
-		exit(1);
-	};
-
+	endMenuchoiseIN(tempStudent);
 }
 
 
@@ -1231,15 +996,15 @@ void studentAvailableCourses(vector<Student>& tempStudent) // this is case 5 in 
 	inputFile.close();
 
 
-	SetConsoleTextAttribute(color, 7);
+	SetConsoleTextAttribute(color, 15);
 	Sleep(1000);
 
-	SetConsoleTextAttribute(color, 7);
-	cout << "\n\nPress 1 to return to the student database\n"; // returns to student database
+	SetConsoleTextAttribute(color, 15);
+	cout << "Press 1 to return to the student database\n"; // returns to student database
 	cout << "Press 2 to return to the main menu\n"; // returns to main menu
-	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
+	cout << "Press 3 or anything else to EXIT the program\n\n";// EXIT
 	int menuChoiceStudent;
-	cout << "Enter your choice"; cin >> menuChoiceStudent;
+	cout << "Enter your choice: "; cin >> menuChoiceStudent;
 
 	switch (menuChoiceStudent) {
 	case 1:
@@ -1269,7 +1034,7 @@ void endMenuchoise(vector<Student>& tempStudent) // this is for the student
 	cout << "Press 1 to return to the student database\n"; // returns to student database
 	cout << "Press 2 to return to the main menu\n"; // returns to main menu
 	cout << "Press 3 or anything else to EXIT the program\n";// EXIT
-	cout << "Enter your choice"; cin >> menuChoiceStudent;
+	cout << "Enter your choice: "; cin >> menuChoiceStudent;
 
 	switch (menuChoiceStudent) {
 	case 1:
@@ -1289,6 +1054,44 @@ void endMenuchoise(vector<Student>& tempStudent) // this is for the student
 		Sleep(500);
 		exit(1);
 	};
+
+}
+
+void endMenuchoiseIN(vector<Student>& tempStudent) // this is for the student
+{
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(color, 14);
+	cout << "Control Menu\n";
+	SetConsoleTextAttribute(color, 15);
+	cout << "Press 1 to return to the student database for this semester\n"; // returns to student database
+	cout << "Press 2 to return to the main student database\n";
+	cout << "Press 3 to return to the main Login menu\n"; // returns to main menu
+	cout << "Press 4 or anything else to EXIT the program\n\n";// EXIT
+	int menuChoiceStudent;
+	cout << "Enter your choice: "; cin >> menuChoiceStudent;
+
+	switch (menuChoiceStudent) {
+	case 1:
+		cout << "\n\nLogging out\nReturning to student database for current semester menu...";
+		Sleep(1000);
+		studentDatabaseIN();
+
+	case 2:
+		cout << "\n\nLogging out\nReturning to student database for current semester menu...";
+		Sleep(1000);
+		studentDatabase(tempStudent);
+	case 3:
+		cout << "\n\nLogging out\nReturning to main menu...";
+		Sleep(1000);
+		main();
+	case 4:
+		cout << "\n\nClosing App...";
+		exit(1);
+	default:
+		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
+		exit(1);
+	};
+
 
 }
 
