@@ -494,7 +494,6 @@ void studentSearch(vector<Student>& tempStudent) {
 	
 	for (i = 0; i < tempStudent.size(); i++) {
 		if (tempStudent[i].ID == IDsearch) {
-			cout << tempStudent.size() << endl;
 			cout << "\n Student " << IDsearch << " found\n Loading student data...\n\n\n";
 			Sleep(1000);
 
@@ -590,10 +589,9 @@ void classGradeAverages(vector<Student>& tempStudent) {
 	int i;
 	tempStudent = readFromFile();
 	float ACCY302c = 0, ACCY303c = 0, ACCY317c = 0, ACCY321c = 0, ACCY302a = 0, ACCY303a = 0, ACCY317a = 0, ACCY321a = 0, average = 0;
-	std::fstream StudentDatabase("stDB.csv", std::ios::in);
 	if (tempStudent.size() == 0) {
 		char returnMain = 'y';
-		cout << " Empty Database\n\n";
+		cout << " Empty Database\n\n\n\n";
 		cout << " Press x to return to Admin menu: ";
 		while (returnMain != 'x' && returnMain != 'X') {
 			cin >> returnMain;
@@ -606,24 +604,24 @@ void classGradeAverages(vector<Student>& tempStudent) {
 		}
 	}
 	for (i = 0; i < tempStudent.size(); i++) {
-		ACCY302c += tempStudent[i].class1.courseCost;
-		ACCY303c += tempStudent[i].class2.courseCost;
-		ACCY317c += tempStudent[i].class3.courseCost;
-		ACCY321c += tempStudent[i].class4.courseCost;
-
+		ACCY302c += tempStudent[i].class1.studentGrade;
+		ACCY303c += tempStudent[i].class2.studentGrade;
+		ACCY317c += tempStudent[i].class3.studentGrade;
+		ACCY321c += tempStudent[i].class4.studentGrade;
+		
 	}
-	ACCY302a = ACCY302c / tempStudent.size();
-	ACCY303a = ACCY303c / tempStudent.size();
-	ACCY317a = ACCY317c / tempStudent.size();
-	ACCY321a = ACCY321c / tempStudent.size();
+	ACCY302a = ACCY302c/tempStudent.size();
+	ACCY303a = ACCY303c/tempStudent.size();
+	ACCY317a = ACCY317c/tempStudent.size();
+	ACCY321a = ACCY321c/tempStudent.size();
 	average = (ACCY302a + ACCY303a + ACCY317a + ACCY321a) / 4;
 
-	cout << " ACCY302 student grade average: " << ACCY302a << "%\n";
-	cout << " ACCY303 student grade average: " << ACCY303a << "%\n";
-	cout << " ACCY317 student grade average: " << ACCY317a << "%\n";
-	cout << " ACCY321 student grade average: " << ACCY321a << "%\n";
+	cout << " ACCY302 student grade average: " << fixed << setprecision(2) << ACCY302a << "%\n";
+	cout << " ACCY303 student grade average: " << fixed << setprecision(2) << ACCY303a << "%\n";
+	cout << " ACCY317 student grade average: " << fixed << setprecision(2) << ACCY317a << "%\n";
+	cout << " ACCY321 student grade average: " << fixed << setprecision(2) << ACCY321a << "%\n";
 
-	cout << "\n Average semester grade for 3rd year students: " << average << "%";
+	cout << "\n Average grade across classes:  " << fixed << setprecision(2) << average << "%\n\n";
 
 	char returnMain = 'y';
 	cout << " Press x to return to Admin menu: ";
@@ -645,10 +643,8 @@ void tuitionTotal(vector<Student>& tempStudent) {
 	cout << "           ***Tuition total***\n\n\n";
 	Student s;
 	int i;
-	float tuitionTotal = 0;
-	tempStudent = readFromFile();
-	fstream StudentDatabase("stDB.csv", ios::out);
-	if (tempStudent.size() == 0) { // loops through lines on vector from the csv
+	float tuitionTotal = 0, tuitionAverage;
+	if (tempStudent.size() == 0) {
 		char returnMain = 'y';
 		cout << " Empty Database\n\n";
 		cout << " Press x to return to Admin menu: ";
@@ -662,15 +658,25 @@ void tuitionTotal(vector<Student>& tempStudent) {
 			}
 		}
 	}
-	vector <float> tuition;
 	for (i = 0; i < tempStudent.size(); i++) {
-		tuition[i] = tempStudent[i].class1.courseCost + tempStudent[i].class2.courseCost + tempStudent[i].class3.courseCost + tempStudent[i].class4.courseCost;
+		tuitionTotal += (tempStudent[i].class1.courseCost + tempStudent[i].class2.courseCost + tempStudent[i].class3.courseCost + tempStudent[i].class4.courseCost);
 	}
-	for (i = 0; i < tuition.size(); i++) {
-		tuitionTotal += tuition[i];
-	}
-	cout << " Total income from student class enrollments: $" << tuitionTotal << endl;
+	tuitionAverage = tuitionTotal / tempStudent.size();
+	cout << " " << tempStudent.size() << " students enrolled" << endl;
+	cout << " Total income from student enrollments: $" << tuitionTotal << endl;
+	cout << " Average tuition per enrolled student:  $" << tuitionAverage << endl << endl << endl;
 
+	char returnMain = 'y';
+	cout << " Press x to return to Admin menu: ";
+	while (returnMain != 'x' && returnMain != 'X') {
+		cin >> returnMain;
+		if (returnMain == 'x' || returnMain == 'X') {
+			adminDatabase(tempStudent);
+		}
+		else {
+			cout << "\n Invalid Input. Press x to return to main menu: ";
+		}
+	}
 }
 
 void studentDatabase(vector<Student>& tempStudent) {
