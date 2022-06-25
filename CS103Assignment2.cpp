@@ -482,8 +482,12 @@ void adminDatabase(vector<Student>& tempStudent) {
 
 void studentSearch(vector<Student>& tempStudent) {
 	system("cls");
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	string IDsearch;
-	cout << "           ***Student Search***\n\n\n\n";
+	SetConsoleTextAttribute(color, 11);
+	cout << "           ***Student Search & Display***\n\n\n\n";
+	SetConsoleTextAttribute(color, 11);
 	cout << " Search for student by ID: "; cin >> IDsearch;
 	Student s;
 	char searchChoice = 'n';
@@ -494,9 +498,10 @@ void studentSearch(vector<Student>& tempStudent) {
 	
 	for (i = 0; i < tempStudent.size(); i++) {
 		if (tempStudent[i].ID == IDsearch) {
+			SetConsoleTextAttribute(color, 2);
 			cout << "\n Student " << IDsearch << " found\n Loading student data...\n\n\n";
 			Sleep(1000);
-
+			SetConsoleTextAttribute(color, 11);
 			cout << " *Personal Contact Details*\n\n";
 			cout << " Student ID:       " << tempStudent[i].ID << endl;
 			cout << " Student Password: " << tempStudent[i].Password << endl;
@@ -526,7 +531,9 @@ void studentSearch(vector<Student>& tempStudent) {
 			}
 		}
 	}
+	SetConsoleTextAttribute(color, 4);
 	cout << " No student with ID: " << IDsearch << " was found\n";
+	SetConsoleTextAttribute(color, 11);
 	cout << " Search again? Y/N: "; cin >> searchChoice;
 	if (searchChoice == 'y' || searchChoice == 'Y') {
 			studentSearch(tempStudent);
@@ -540,6 +547,8 @@ void studentSearch(vector<Student>& tempStudent) {
 
 void printDatabase(vector<Student>& tempStudent) {
 	system("cls");
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	cout << "           ***Full Student Database***";
 	cout << " Printing full database...\n\n\n\n";
 	Sleep(1000);
@@ -583,6 +592,8 @@ void printDatabase(vector<Student>& tempStudent) {
 
 void classGradeAverages(vector<Student>& tempStudent) {
 	system("cls");
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	cout << "           ***Class Grade Averages***\n\n\n";
 	Student s;
 	char searchChoice;
@@ -639,7 +650,8 @@ void classGradeAverages(vector<Student>& tempStudent) {
 
 void tuitionTotal(vector<Student>& tempStudent) {
 	system("cls");
-	string IDsearch;
+	ShowHeader();
+	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 	cout << "           ***Tuition total***\n\n\n";
 	Student s;
 	int i;
