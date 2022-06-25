@@ -163,7 +163,7 @@ int main() {
 
 	ShowHeader();
 
-
+	system("color 0f");
 	vector <Student> tempStudent;
 	tempStudent = readFromFile();
 	int menuChoice, loginChoice;
@@ -453,6 +453,7 @@ void adminLogin(vector<Student>& tempStudent) {
 void adminDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
+	system("color 8b");
 	int menuChoice;
 	cout << "           ***Admin Database Home***\n\n";
 	cout << " Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
@@ -475,6 +476,11 @@ void adminDatabase(vector<Student>& tempStudent) {
 		cout << "\n\n Logging out\n Returning to main menu...";
 		Sleep(1000);
 		main();
+	default: 
+		
+		cout << "\n\n\n Invalid Selection. Press 1-5 to select a menu option ";
+		Sleep(1000);
+		adminDatabase(tempStudent);
 	};
 }
 
@@ -483,11 +489,11 @@ void adminDatabase(vector<Student>& tempStudent) {
 void studentSearch(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	system("color 8b");
 	string IDsearch;
-	SetConsoleTextAttribute(color, 11);
+	
 	cout << "           ***Student Search & Display***\n\n\n\n";
-	SetConsoleTextAttribute(color, 11);
+	
 	cout << " Search for student by ID: "; cin >> IDsearch;
 	Student s;
 	char searchChoice = 'n';
@@ -498,10 +504,11 @@ void studentSearch(vector<Student>& tempStudent) {
 	
 	for (i = 0; i < tempStudent.size(); i++) {
 		if (tempStudent[i].ID == IDsearch) {
-			SetConsoleTextAttribute(color, 2);
+			
+			
 			cout << "\n Student " << IDsearch << " found\n Loading student data...\n\n\n";
 			Sleep(1000);
-			SetConsoleTextAttribute(color, 11);
+			system("color 1f");
 			cout << " *Personal Contact Details*\n\n";
 			cout << " Student ID:       " << tempStudent[i].ID << endl;
 			cout << " Student Password: " << tempStudent[i].Password << endl;
@@ -531,9 +538,9 @@ void studentSearch(vector<Student>& tempStudent) {
 			}
 		}
 	}
-	SetConsoleTextAttribute(color, 4);
+	
 	cout << " No student with ID: " << IDsearch << " was found\n";
-	SetConsoleTextAttribute(color, 11);
+	
 	cout << " Search again? Y/N: "; cin >> searchChoice;
 	if (searchChoice == 'y' || searchChoice == 'Y') {
 			studentSearch(tempStudent);
@@ -548,7 +555,7 @@ void studentSearch(vector<Student>& tempStudent) {
 void printDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	system("color 8b");
 	cout << "           ***Full Student Database***";
 	cout << " Printing full database...\n\n\n\n";
 	Sleep(1000);
@@ -585,6 +592,7 @@ void printDatabase(vector<Student>& tempStudent) {
 			adminDatabase(tempStudent);
 		}
 		else {
+			system("color 3f");
 			cout << "\n Invalid Input. Press x to return to main menu: ";
 		}
 	}
@@ -593,7 +601,7 @@ void printDatabase(vector<Student>& tempStudent) {
 void classGradeAverages(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	system("color 8b");
 	cout << "           ***Class Grade Averages***\n\n\n";
 	Student s;
 	char searchChoice;
@@ -651,7 +659,7 @@ void classGradeAverages(vector<Student>& tempStudent) {
 void tuitionTotal(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
-	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+	system("color 8b");
 	cout << "           ***Tuition total***\n\n\n";
 	Student s;
 	int i;
