@@ -17,6 +17,16 @@
 #include <sstream>
 using namespace std;
 
+
+struct Teacher {
+	string fName;
+	string lName;
+	Teacher(string fN = "FirstName", string lN = "LastName") {
+		fName = fN;
+		lName = lN;
+	}
+
+};
 struct Parent {
 	string fName;
 	string lName;
@@ -26,15 +36,6 @@ struct Parent {
 		lName = lN;
 		contactNumber = cN;
 	}
-};
-struct Teacher {
-	string fName;
-	string lName;
-	Teacher(string fN = "FirstName", string lN = "LastName") {
-		fName = fN;
-		lName = lN;
-	}
-
 };
 struct classStr {
 	string code;
@@ -72,31 +73,10 @@ struct Student { // main struct, all others are nested within student, database 
 
 
 
+// for the course info
 
 
-
-
-vector <Student> Registration(vector<Student>& student);
-vector <Student> StudentLogin(vector<Student>& tempStudent);
-void adminLogin(vector<Student>& tempStudent);
-void adminDatabase(vector<Student>& tempStudent);
-void studentDatabase(vector<Student>& tempStudent);
-vector <Student> readFromFile();
-
-//admin Database menu option functions
-void studentSearch(vector<Student>& tempStudent);
-void printDatabase(vector<Student>& tempStudent);
-void classGradeAverages(vector<Student>& tempStudent);
-void tuitionTotal(vector<Student>& tempStudent);
-
-//Student functions
-void viewStudentPersonaldetails(vector<Student>& tempStudent);
-void studentDatabaseIN();
-void StudentGradeSum(vector<Student>& tempStudent);
-void studentTuitionSum(vector<Student>& tempStudent);
-void studentAvailableCourses(vector<Student>& tempStudent);
-void studentAvailableCourses(vector<Student>& tempStudent);
-struct CourseRecord { // for the course info
+struct CourseRecord { 
 public:
 	CourseRecord(  //courseID, coursename, semester, YEAR, costlocal, costinternational, teacher per file
 		string id,
@@ -142,24 +122,46 @@ public:
 	double CostInternational;
 	string Teacher;
 
-}; // for the course info
+}; 
 void displayCourses(vector<CourseRecord>& courses) { // for the course info
 
 	for (auto course : courses) {
 		course.display();
 	}
-}  
+}
+// end of course info structures.
+
+vector <Student> Registration(vector<Student>& student);
+vector <Student> StudentLogin(vector<Student>& tempStudent);
+void adminLogin(vector<Student>& tempStudent);
+void adminDatabase(vector<Student>& tempStudent);
+void studentDatabase(vector<Student>& tempStudent);
+vector <Student> readFromFile();
+
+//admin Database menu option functions
+void studentSearch(vector<Student>& tempStudent);
+void printDatabase(vector<Student>& tempStudent);
+void classGradeAverages(vector<Student>& tempStudent);
+void tuitionTotal(vector<Student>& tempStudent);
+
+//Student functions
+void viewStudentPersonaldetails(vector<Student>& tempStudent);
+void studentDatabaseIN();
+void StudentGradeSum(vector<Student>& tempStudent);
+void studentTuitionSum(vector<Student>& tempStudent);
+void studentAvailableCourses(vector<Student>& tempStudent);
+void studentAvailableCourses(vector<Student>& tempStudent);
 
 //Headers and functionality
 void ShowHeader();
 void endMenuchoiseIN(vector<Student>& tempStudent);
 void endMenuchoise(vector<Student>& tempStudent);
 
+
+
 int main() {
-
-	ShowHeader();
-
 	system("color 0f");
+	ShowHeader();
 	vector <Student> tempStudent;
 	tempStudent = readFromFile();
 	int menuChoice, loginChoice;
@@ -295,6 +297,7 @@ vector <Student> Registration(vector<Student>& tempStudent) {
 
 
 }
+// function to read data from cvs file onto the vector (tempStudent)
 vector <Student> readFromFile() {
 	fstream StudentDatabase("stDB.csv", ios::in);
 	vector<Student> tempStudent;
@@ -363,6 +366,7 @@ vector <Student> readFromFile() {
 	return(tempStudent);
 
 }
+// compares user input for ID and PW with data on csv to check for a match
 vector <Student> StudentLogin(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -412,9 +416,10 @@ vector <Student> StudentLogin(vector<Student>& tempStudent) {
 	cout << " Closing app...\n\n\n\n";
 	Sleep(1000);
 	exit(1);
-	return(tempStudent); // is this loading into the right vector to call later??
+	return(tempStudent); 
 }
 
+//check if user input ID and PW match hardcoded values of ID= 000000 & PW = Password
 void adminLogin(vector<Student>& tempStudent) {
 	system("cls");
 	int counter = 3, flag = 0;
@@ -446,6 +451,7 @@ void adminLogin(vector<Student>& tempStudent) {
 	exit(3);
 }
 
+//home page for admin database function, menu leads into 4 functions or returns to home page is user decides to log out
 void adminDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -454,8 +460,8 @@ void adminDatabase(vector<Student>& tempStudent) {
 	cout << "           ***Admin Database Home***\n\n";
 	cout << " Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
 	cout << " Press 2 to view student full student database\n";// prints all data in the student database
-	cout << " Press 3 to class grade averages\n"; 
-	cout << " Press 4 to view enrollment tuition total\n"; 
+	cout << " Press 3 to class grade averages\n"; // prints average grade for each class
+	cout << " Press 4 to view enrollment tuition total\n"; // prints total income from student tuition fees
 	cout << " Press 5 to log out\n"; // return to main and log out
 	cout << " Enter your choice: "; cin >> menuChoice;
 
@@ -481,7 +487,7 @@ void adminDatabase(vector<Student>& tempStudent) {
 }
 
 
-
+// user enters ID and if it matches, the line with matching ID on the csv file is displayed
 void studentSearch(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -548,6 +554,7 @@ void studentSearch(vector<Student>& tempStudent) {
 	}
 }
 
+// all data on csv file is printed
 void printDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -593,7 +600,7 @@ void printDatabase(vector<Student>& tempStudent) {
 		}
 	}
 }
-
+// class average grades are printed along with average grade across all classes
 void classGradeAverages(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -652,6 +659,7 @@ void classGradeAverages(vector<Student>& tempStudent) {
 
 }
 
+// total of all tuition fees are added together and displayed, average tuiiton per student is displayed as well
 void tuitionTotal(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -695,7 +703,7 @@ void tuitionTotal(vector<Student>& tempStudent) {
 	}
 }
 
-
+// home page for student database options
 void studentDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -708,7 +716,8 @@ void studentDatabase(vector<Student>& tempStudent) {
 	SetConsoleTextAttribute(color, 15);
 	cout << " Press 1 to access available actions for this current Semester\n";
 	cout << " Press 2 to see all courses available next semester\n";// opens a list of all available courses next semester for a student
-	cout << " Press 3 to log out to main\n\n";
+	cout << " Press 3 to log out to main\n";
+	cout << " Press 4 or anything else to EXIT\n\n";
 	cout << "\n Enter your choice: "; cin >> menuChoice;
 
 	switch (menuChoice) {
@@ -720,11 +729,19 @@ void studentDatabase(vector<Student>& tempStudent) {
 		cout << "\n\nLogging out\nReturning to main menu...";
 		Sleep(1000);
 		main();
+	case 4:
+		cout << "\n\nClosing App - you have been logged out.";
+		Sleep(500);
+		exit(1);
+	default:
+		cout << "\n\nClosing App.. As not 1, 2 or 3 you have been logged out.";
+		Sleep(500);
+		exit(1);
 	};
 
 }
 
-
+// Current semester Student info
 void studentDatabaseIN() {
 	system("cls");
 	ShowHeader();
@@ -744,7 +761,9 @@ void studentDatabaseIN() {
 	cout << " Press 1 to view your Personal and Emergency Contact details\n";
 	cout << " Press 2 to see your grade summary for the year\n";
 	cout << " Press 3 to see tuition cost summary\n";
-	cout << " Press 4 to log out to main\n\n";
+	cout << " Press 4 to log out to student database main\n";
+	cout << " Press 5 to log out to main\n";
+	cout << " Press 6 or anything else to EXIT the program                    \n\n";// EXIT
 	cout << " Enter your choice: "; cin >> menuChoice;
 
 	switch (menuChoice) {
@@ -755,13 +774,26 @@ void studentDatabaseIN() {
 	case 3: studentTuitionSum(tempStudent);
 		break;
 	case 4:
+		studentDatabase(tempStudent);
+		break;
+	case 5:
 		cout << "\n\nLogging out\nReturning to main menu...";
 		Sleep(1000);
 		main();
+		break;
+	case 6:
+		cout << "\n\nClosing App - you have been logged out.";
+		Sleep(500);
+		exit(1);
+	default:
+		cout << "\n\nClosing App.. As not 1, 2, 3, 4 or 5 - you have been logged out.";
+		Sleep(500);
+		exit(1);
 	};
 
 }
 
+// View a student record - enquiry on personal details and emergency contact details
 void viewStudentPersonaldetails(vector<Student>& tempStudent) {
 
 	system("cls");
@@ -786,6 +818,7 @@ void viewStudentPersonaldetails(vector<Student>& tempStudent) {
 			system("cls");
 			ShowHeader();
 			HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+
 			SetConsoleTextAttribute(color, 14);
 			cout << "                         Viewing personal details \n\n";
 			
@@ -812,7 +845,7 @@ void viewStudentPersonaldetails(vector<Student>& tempStudent) {
 }
 
 
-
+// View a student record - enquiry on student grade
 void StudentGradeSum(vector<Student>& tempStudent) {
 	//This function prints course grades.
 	//Note, 90–100 A; 80–89 B; 70–79 C; 60–69 D; 50–59 E; 0–49 F
@@ -840,6 +873,9 @@ void StudentGradeSum(vector<Student>& tempStudent) {
 			HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
 			SetConsoleTextAttribute(color, 14);
 			cout << "                         Viewing Course Mark details \n\n";
+
+			SetConsoleTextAttribute(color, 15);
+			cout << " Welcome " << tempStudent[i].fName << " " << tempStudent[i].lName << endl;
 
 			SetConsoleTextAttribute(color, 10);
 			cout << "\n - Your Current Semester's Marks - \n\n";
@@ -895,6 +931,8 @@ void StudentGradeSum(vector<Student>& tempStudent) {
 	endMenuchoiseIN(tempStudent);
 
 }
+
+// View a student record - enquiry on student costs
 void studentTuitionSum(vector<Student>& tempStudent) {
 
 	//This function prints a list of current course costs ONLY if both the ID and password match so other students cannot query for other people.
@@ -923,6 +961,9 @@ void studentTuitionSum(vector<Student>& tempStudent) {
 			SetConsoleTextAttribute(color, 14);
 			cout << "                         Viewing Course Cost details \n\n";
 
+			SetConsoleTextAttribute(color, 15);
+			cout << " Welcome " << tempStudent[i].fName << " " << tempStudent[i].lName << endl;
+
 			SetConsoleTextAttribute(color, 10);
 			cout << "\n - Your Current Semester's Student Fees - \n\n";
 			SetConsoleTextAttribute(color, 15);
@@ -948,7 +989,7 @@ void studentTuitionSum(vector<Student>& tempStudent) {
 	endMenuchoiseIN(tempStudent);
 }
 
-
+// View all available courses in the following semester
 void studentAvailableCourses(vector<Student>& tempStudent) // this is case 5 in the main student area
 {
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -995,11 +1036,10 @@ void studentAvailableCourses(vector<Student>& tempStudent) // this is case 5 in 
 	displayCourses(Courses);
 	inputFile.close();
 
-
+	SetConsoleTextAttribute(color, 2);
+	cout << "Control Menu                                   \n";
 	SetConsoleTextAttribute(color, 15);
-	Sleep(1000);
 
-	SetConsoleTextAttribute(color, 15);
 	cout << "Press 1 to return to the student database\n"; // returns to student database
 	cout << "Press 2 to return to the main menu\n"; // returns to main menu
 	cout << "Press 3 or anything else to EXIT the program\n\n";// EXIT
@@ -1027,6 +1067,7 @@ void studentAvailableCourses(vector<Student>& tempStudent) // this is case 5 in 
 
 }
 
+// For code readablity reusable menu
 void endMenuchoise(vector<Student>& tempStudent) // this is for the student
 {
 	int menuChoiceStudent;
@@ -1057,19 +1098,25 @@ void endMenuchoise(vector<Student>& tempStudent) // this is for the student
 
 }
 
+// For code readablity reusable within the student database; has different colour to show submenu WITHIN DB
 void endMenuchoiseIN(vector<Student>& tempStudent) // this is for the student
-{
+{	
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(color, 14);
-	cout << "Control Menu\n";
-	SetConsoleTextAttribute(color, 15);
-	cout << "Press 1 to return to the student database for this semester\n"; // returns to student database
-	cout << "Press 2 to return to the main student database\n";
-	cout << "Press 3 to return to the main Login menu\n"; // returns to main menu
-	cout << "Press 4 or anything else to EXIT the program\n\n";// EXIT
+	SetConsoleTextAttribute(color, 46);
+	cout << endl; 
+	cout << "---------------------------------------------------------------------------------------------\n";
+	cout << "                Current Semester Control Menu                                                \n";
+	SetConsoleTextAttribute(color, 47);
+	cout << "                Press 1 to return to the student database for this semester                  \n"; // returns to student database
+	cout << "                Press 2 to return to the main student database                               \n";
+	cout << "                Press 3 to return to the main Login menu                                     \n"; // returns to main menu
+	cout << "                Press 4 or anything else to EXIT the program                                 \n";// EXIT
+	cout << "---------------------------------------------------------------------------------------------\n";
+	SetConsoleTextAttribute(color, 7);
 	int menuChoiceStudent;
-	cout << "Enter your choice: "; cin >> menuChoiceStudent;
 
+	cout << "Enter your choice: "; cin >> menuChoiceStudent;
+	
 	switch (menuChoiceStudent) {
 	case 1:
 		cout << "\n\nLogging out\nReturning to student database for current semester menu...";
@@ -1088,13 +1135,14 @@ void endMenuchoiseIN(vector<Student>& tempStudent) // this is for the student
 		cout << "\n\nClosing App...";
 		exit(1);
 	default:
-		cout << "\n\nClosing App.. As not 1, 2 or 3 - you have been logged out.";
+		cout << "\n\nClosing App.. As not 1, 2, 3 or 4 - you have been logged out.";
 		exit(1);
 	};
 
 
 }
 
+// For code readablity reusable menu - header function
 void ShowHeader() //the function which shows the header on each screen
 {
 	HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
