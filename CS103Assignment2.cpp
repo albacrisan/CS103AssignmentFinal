@@ -160,7 +160,6 @@ void endMenuchoise(vector<Student>& tempStudent);
 
 
 int main() {
-	system("color 0f");
 	ShowHeader();
 	vector <Student> tempStudent;
 	tempStudent = readFromFile();
@@ -510,7 +509,6 @@ void studentSearch(vector<Student>& tempStudent) {
 			
 			cout << "\n Student " << IDsearch << " found\n Loading student data...\n\n\n";
 			Sleep(1000);
-			system("color 1f");
 			cout << " *Personal Contact Details*\n\n";
 			cout << " Student ID:       " << tempStudent[i].ID << endl;
 			cout << " Student Password: " << tempStudent[i].Password << endl;
