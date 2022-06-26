@@ -17,6 +17,16 @@
 #include <sstream>
 using namespace std;
 
+
+struct Teacher {
+	string fName;
+	string lName;
+	Teacher(string fN = "FirstName", string lN = "LastName") {
+		fName = fN;
+		lName = lN;
+	}
+
+};
 struct Parent {
 	string fName;
 	string lName;
@@ -26,15 +36,6 @@ struct Parent {
 		lName = lN;
 		contactNumber = cN;
 	}
-};
-struct Teacher {
-	string fName;
-	string lName;
-	Teacher(string fN = "FirstName", string lN = "LastName") {
-		fName = fN;
-		lName = lN;
-	}
-
 };
 struct classStr {
 	string code;
@@ -295,6 +296,7 @@ vector <Student> Registration(vector<Student>& tempStudent) {
 
 
 }
+// function to read data from cvs file onto the vector (tempStudent)
 vector <Student> readFromFile() {
 	fstream StudentDatabase("stDB.csv", ios::in);
 	vector<Student> tempStudent;
@@ -363,6 +365,7 @@ vector <Student> readFromFile() {
 	return(tempStudent);
 
 }
+// compares user input for ID and PW with data on csv to check for a match
 vector <Student> StudentLogin(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -412,9 +415,10 @@ vector <Student> StudentLogin(vector<Student>& tempStudent) {
 	cout << " Closing app...\n\n\n\n";
 	Sleep(1000);
 	exit(1);
-	return(tempStudent); // is this loading into the right vector to call later??
+	return(tempStudent); 
 }
 
+//check if user input ID and PW match hardcoded values of ID= 000000 & PW = Password
 void adminLogin(vector<Student>& tempStudent) {
 	system("cls");
 	int counter = 3, flag = 0;
@@ -446,6 +450,7 @@ void adminLogin(vector<Student>& tempStudent) {
 	exit(3);
 }
 
+//home page for admin database function, menu leads into 4 functions or returns to home page is user decides to log out
 void adminDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -454,8 +459,8 @@ void adminDatabase(vector<Student>& tempStudent) {
 	cout << "           ***Admin Database Home***\n\n";
 	cout << " Press 1 to search for a student by ID number\n"; // search for student by ID which spits out student data in full if matching ID is found
 	cout << " Press 2 to view student full student database\n";// prints all data in the student database
-	cout << " Press 3 to class grade averages\n"; 
-	cout << " Press 4 to view enrollment tuition total\n"; 
+	cout << " Press 3 to class grade averages\n"; // prints average grade for each class
+	cout << " Press 4 to view enrollment tuition total\n"; // prints total income from student tuition fees
 	cout << " Press 5 to log out\n"; // return to main and log out
 	cout << " Enter your choice: "; cin >> menuChoice;
 
@@ -481,7 +486,7 @@ void adminDatabase(vector<Student>& tempStudent) {
 }
 
 
-
+// user enters ID and if it matches, the line with matching ID on the csv file is displayed
 void studentSearch(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -548,6 +553,7 @@ void studentSearch(vector<Student>& tempStudent) {
 	}
 }
 
+// all data on csv file is printed
 void printDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -593,7 +599,7 @@ void printDatabase(vector<Student>& tempStudent) {
 		}
 	}
 }
-
+// class average grades are printed along with average grade across all classes
 void classGradeAverages(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -652,6 +658,7 @@ void classGradeAverages(vector<Student>& tempStudent) {
 
 }
 
+// total of all tuition fees are added together and displayed, average tuiiton per student is displayed as well
 void tuitionTotal(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
@@ -695,7 +702,7 @@ void tuitionTotal(vector<Student>& tempStudent) {
 	}
 }
 
-
+// home page for student database options
 void studentDatabase(vector<Student>& tempStudent) {
 	system("cls");
 	ShowHeader();
