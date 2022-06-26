@@ -160,7 +160,7 @@ int main() {
 
 	ShowHeader();
 
-	system("color 0f");
+	
 	vector <Student> tempStudent;
 	tempStudent = readFromFile();
 	int menuChoice, loginChoice;
@@ -509,7 +509,6 @@ void studentSearch(vector<Student>& tempStudent) {
 			
 			cout << "\n Student " << IDsearch << " found\n Loading student data...\n\n\n";
 			Sleep(1000);
-			system("color 1f");
 			cout << " *Personal Contact Details*\n\n";
 			cout << " Student ID:       " << tempStudent[i].ID << endl;
 			cout << " Student Password: " << tempStudent[i].Password << endl;
